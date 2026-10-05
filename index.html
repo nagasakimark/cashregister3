@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Restaurant</title>
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+Rounded+1c:wght@500;800&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: 'NH'; src: url('nh.otf') format('opentype'); }
+@font-face { font-family: 'DSD'; src: url('dsdigi.TTF') format('truetype'), url('dsdigi.ttf') format('truetype'); }
+
+:root {
+  --wall: #6eb5d0;
+  --accent: #4a9bb5;
+  --panel: #fff7e3;
+  --ink: #2b2a27;
+  --plastic: #efe7d6;
+  --plastic-dark: #d9cfb9;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body {
+  font-family: 'M PLUS Rounded 1c', 'NH', sans-serif;
+  color: var(--ink);
+  background: #2b2118;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none; -webkit-user-select: none;
+}
+button { font-family: inherit; color: inherit; }
+img { -webkit-user-drag: none; user-select: none; }
+.nh { font-family: 'NH', 'M PLUS Rounded 1c', sans-serif; font-weight: 500; }
+
+/* ================= RESTAURANT SELECTION ================= */
+#picker {
+  position: fixed; inset: 0; overflow: auto;
+  background-color: #f4c95d;
+  background-image:
+    linear-gradient(rgba(255,255,255,.22) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255,255,255,.22) 2px, transparent 2px);
+  background-size: 48px 24px;
+  display: flex; flex-direction: column; align-items: center; padding: 48px 24px 64px;
+}
+#picker h1 { font-family: 'NH', sans-serif; font-weight: 500; font-size: clamp(36px, 5vw, 64px); line-height: 1.3; margin: 0 0 36px; color: #3b2a12; }
+.street { display: flex; flex-wrap: wrap; gap: 36px; justify-content: center; max-width: 1400px; }
+.storefront {
+  appearance: none; border: 0; padding: 0; cursor: pointer; width: 280px; background: none;
+  display: flex; flex-direction: column; align-items: stretch; transition: transform .12s;
+}
+.storefront:hover { transform: translateY(-4px); }
+.storefront:active { transform: translateY(2px) scale(.98); }
+.awning {
+  height: 56px; border-radius: 14px 14px 0 0; position: relative; z-index: 1;
+  background: repeating-linear-gradient(90deg, var(--c1) 0 35px, #fffaf0 35px 70px);
+  filter: drop-shadow(3px 0 0 #3b2a12) drop-shadow(-3px 0 0 #3b2a12) drop-shadow(0 -3px 0 #3b2a12) drop-shadow(0 3px 0 #3b2a12) drop-shadow(0 5px 0 rgba(0,0,0,.18));
+}
+.awning::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -14px; height: 14px;
+  background: radial-gradient(circle at 17.5px 0, var(--c1) 17px, transparent 18px) 0 0 / 70px 14px repeat-x,
+              radial-gradient(circle at 52.5px 0, #fffaf0 17px, transparent 18px) 0 0 / 70px 14px repeat-x;
+}
+.shopfront {
+  background: #fffaf0; border: 6px solid var(--c2); border-top: 0; border-radius: 0 0 18px 18px;
+  padding: 32px 18px 22px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+  box-shadow: 0 0 0 3px #3b2a12, 0 13px 0 rgba(0,0,0,.18), 0 20px 30px rgba(0,0,0,.18);
+}
+.shopfront img { width: 130px; height: 130px; object-fit: cover; border-radius: 20px; background: #fff; box-shadow: 0 3px 0 rgba(0,0,0,.12); }
+.shopfront .emoji { font-size: 90px; line-height: 130px; }
+.shopfront h2 { font-family: 'NH', sans-serif; font-weight: 500; font-size: 28px; margin: 4px 0 0; text-align: center; line-height: 1.25; }
+.shopfront p { margin: 0; font-size: 14px; font-weight: 800; color: #6e5e3e; text-align: center; }
+
+/* ================= STAGE ================= */
+#app { position: fixed; inset: 0; display: none; background: var(--wall); }
+#app.on { display: block; }
+#stage {
+  position: absolute; left: 0; top: 0; width: 1560px; height: 700px;
+  transform-origin: 0 0; overflow: hidden; --dx: 0px; --dy: 0px; --cols: 3;
+}
+.abs { position: absolute; }
+
+/* wall + counter */
+#wall {
+  left: 0; top: 0; width: 100%; height: calc(580px + var(--dy));
+  background-color: var(--wall);
+  background-image:
+    linear-gradient(rgba(255,255,255,.2) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255,255,255,.2) 2px, transparent 2px);
+  background-size: 64px 32px;
+}
+#wall::after { /* soft shade where wall meets counter */
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 60px;
+  background: linear-gradient(transparent, rgba(0,0,0,.16));
+}
+#countertop {
+  left: 0; top: calc(570px + var(--dy)); width: 100%; height: 130px;
+  background-color: #c99359;
+  background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 3px, transparent 3px 17px, rgba(90,50,10,.07) 17px 19px, transparent 19px 41px);
+  box-shadow: inset 0 4px 0 #e2b177, inset 0 14px 18px rgba(0,0,0,.12);
+}
+#counterfront {
+  left: 0; top: calc(690px + var(--dy)); width: 100%; height: 60px;
+  background-color: #8a5629;
+  background-image: repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 4px, transparent 4px 29px);
+  box-shadow: inset 0 5px 0 #a86d38, inset 0 -8px 12px rgba(0,0,0,.25);
+}
+.floorshadow { border-radius: 50%; background: radial-gradient(closest-side, rgba(40,20,0,.45), rgba(40,20,0,0)); }
+
+/* wall buttons */
+.wallbtn {
+  appearance: none; border: 0; cursor: pointer; height: 40px; padding: 0 15px; border-radius: 999px;
+  background: #fffdf6; color: #3b2a12; font-weight: 800; font-size: 15px;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 0 rgba(0,0,0,.25);
+}
+.wallbtn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.25); }
+.wallbtn.icon { width: 40px; padding: 0; justify-content: center; }
+
+/* hanging sign */
+#sign {
+  left: 50%; transform: translateX(-50%); top: 20px; width: 560px; height: 66px;
+  background: #fff8e7; border: 5px solid var(--accent); border-radius: 18px;
+  display: flex; align-items: center; justify-content: center; gap: 12px; padding: 0 14px;
+  box-shadow: 0 8px 0 rgba(0,0,0,.14), 0 14px 22px rgba(0,0,0,.15);
+}
+#sign::before, #sign::after {
+  content: ''; position: absolute; top: -18px; width: 4px; height: 14px; background: #6b5a44; border-radius: 2px;
+}
+#sign::before { left: 90px; } #sign::after { right: 90px; }
+#signLogo { width: 46px; height: 46px; border-radius: 14px; object-fit: cover; flex-shrink: 0; }
+#signName {
+  font-family: 'NH', sans-serif; font-size: 36px; line-height: 1.3; padding-bottom: .1em; color: #3b2a12; outline: none;
+  white-space: nowrap; max-width: 420px;
+}
+
+/* speech */
+#talk { left: calc(610px + var(--dx)); top: 94px; width: 600px; height: 36px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; }
+.say { display: flex; align-items: center; gap: 10px; }
+.say.cust { flex-direction: row-reverse; }
+.who { display: none; flex-shrink: 0; font-size: 12px; font-weight: 800; letter-spacing: .06em; padding: 4px 10px; border-radius: 999px; background: #2b2a27; color: #fff; }
+.say.cust .who { background: #ffc21a; color: #4a2e00; }
+.bubble { background: #fff; border-radius: 12px; padding: 2px 12px 4px; font-family: 'NH', sans-serif; font-size: 18px; line-height: 1.25; white-space: nowrap; box-shadow: 0 3px 0 rgba(0,0,0,.15); animation: pop .3s ease both; }
+.say.cust .bubble { background: #fff1c2; }
+
+/* ================= MENU STAND ================= */
+#menuStand { left: 30px; top: 100px; width: calc(530px + var(--dx)); height: calc(540px + var(--dy)); }
+#rg { position: absolute; left: var(--dx); top: var(--dy); width: 1560px; height: 700px; pointer-events: none; }
+#rg .hit { pointer-events: auto; }
+.board {
+  position: absolute; inset: 0; border-radius: 20px; background: var(--accent);
+  box-shadow: inset 0 3px 0 rgba(255,255,255,.35), inset 0 -5px 0 rgba(0,0,0,.2), 0 12px 0 rgba(0,0,0,.12);
+  padding: 11px;
+}
+.board-inner {
+  width: 100%; height: 100%; border-radius: 12px; background: var(--panel);
+  box-shadow: inset 0 3px 8px rgba(0,0,0,.18);
+  padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 8px; overflow: hidden;
+}
+.clip { left: 200px; top: -14px; width: 90px; height: 28px; border-radius: 10px 10px 6px 6px; background: #b9bec6; box-shadow: inset 0 3px 0 #e3e6ea, inset 0 -4px 0 #8e949c, 0 3px 4px rgba(0,0,0,.25); z-index: 2; }
+.clip::after { content: ''; position: absolute; left: 38px; top: 8px; width: 24px; height: 10px; border-radius: 5px; background: #7d838b; }
+.foot { position: absolute; bottom: -16px; width: 46px; height: 20px; background: #5a3a1c; border-radius: 0 0 8px 8px; }
+.stshadow { position: absolute; left: -10px; right: -10px; bottom: -34px; height: 40px; border-radius: 50%; background: radial-gradient(closest-side, rgba(40,20,0,.45), rgba(40,20,0,0)); }
+.menuhead { display: flex; align-items: center; gap: 10px; height: 44px; flex-shrink: 0; }
+.menuhead img { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; }
+.menuhead h2 { margin: 0; font-family: 'NH', sans-serif; font-weight: 500; font-size: 34px; line-height: 1.25; }
+.tabs { display: flex; gap: 8px; flex-shrink: 0; }
+.tab {
+  appearance: none; border: 0; cursor: pointer; flex: 1; height: 38px; border-radius: 10px 10px 5px 5px;
+  background: #f1e6cb; color: #6e5e3e; font-weight: 800; font-size: 15px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  box-shadow: 0 4px 0 #dccb9f;
+}
+.tab.now { background: #2f6fdb; color: #fff; box-shadow: 0 4px 0 #1f4e9e; }
+.tab.done { background: #ddefd9; color: #1e6b3a; box-shadow: 0 4px 0 #b7d8af; }
+.tab.active { outline: 3px solid #2b2a27; outline-offset: 2px; }
+.tab:disabled { cursor: default; opacity: .5; }
+.tab.done:disabled { opacity: 1; }
+.tab:not(:disabled):active { transform: translateY(3px); box-shadow: none; }
+#grid {
+  flex-grow: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 12px; align-content: start;
+  padding: 4px 6px 10px 2px; scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+}
+#grid::-webkit-scrollbar { width: 10px; }
+#grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 6px; }
+.card {
+  appearance: none; border: 0; cursor: pointer; background: #fff; border-radius: 16px;
+  aspect-ratio: 4 / 5; container-type: inline-size;
+  box-shadow: 0 5px 0 rgba(0,0,0,.12), 0 7px 12px rgba(80,50,0,.1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5cqw; padding: 6px 4px;
+  transition: transform .08s, box-shadow .08s;
+}
+.card:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.12); }
+.card img.pic { width: 64%; aspect-ratio: 1; height: auto; object-fit: contain; }
+.card .sets { display: flex; gap: 2cqw; }
+.card .sets img { width: 28cqw; height: 28cqw; object-fit: contain; }
+.card .nm { font-family: 'NH', sans-serif; font-size: 19px; font-size: clamp(15px, 12.5cqw, 36px); line-height: 1.3; text-align: center; padding-bottom: .12em; overflow-wrap: anywhere; }
+.card .nm.l1 { font-size: 16px; font-size: clamp(13px, 10.5cqw, 30px); }
+.card .nm.l2 { font-size: 14px; font-size: clamp(12px, 9cqw, 26px); }
+.card .pr { font-weight: 800; font-size: 18px; font-size: clamp(15px, 12cqw, 34px); color: #b42318; line-height: 1.2; }
+.card.newset .pic { opacity: .7; }
+.done-panel { grid-column: 1 / -1; padding-top: 70px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; animation: pop .35s ease both; }
+.done-panel .tick { width: 100px; height: 100px; border-radius: 50%; background: #ddefd9; color: #1e6b3a; display: grid; place-items: center; }
+.done-panel .big { font-family: 'NH', sans-serif; font-size: 42px; line-height: 1.25; }
+.done-panel .small { font-size: 18px; font-weight: 800; color: #6e5e3e; }
+.empty-note { grid-column: 1 / -1; text-align: center; font-weight: 800; color: #6e5e3e; padding: 40px 0; }
+
+/* flying food */
+.fly { position: absolute; z-index: 50; pointer-events: none; transition: transform .55s cubic-bezier(.5,-0.2,.6,1), opacity .55s ease-in; }
+
+/* ================= REGISTER ================= */
+#regBody {
+  left: 630px; top: 134px; width: 500px; height: 356px; border-radius: 26px 26px 8px 8px;
+  background: var(--plastic); z-index: 4;
+  box-shadow: inset 0 4px 0 #fffaf0, inset 0 -6px 0 #d9cfba, inset 6px 0 0 #f6f0e3, inset -6px 0 0 #ddd3be, 0 6px 10px rgba(50,25,0,.18);
+}
+.bezel { left: 38px; top: 14px; width: 424px; height: 72px; border-radius: 12px; background: #2a2d31; padding: 7px; box-shadow: inset 0 2px 0 #4a4e55, 0 3px 0 #c9bfa9; }
+#vfd {
+  width: 100%; height: 100%; border-radius: 8px; background: #06140f; position: relative; overflow: hidden;
+  padding: 2px 12px; font-family: 'DSD', monospace; color: #6bffc1;
+  text-shadow: 0 0 6px rgba(107,255,193,.75), 0 0 16px rgba(107,255,193,.35);
+  box-shadow: inset 0 0 18px rgba(0,0,0,.9);
+}
+#vfd.err { color: #ff8a7a; text-shadow: 0 0 6px rgba(255,138,122,.85); animation: shake .45s; }
+.vrow { display: flex; justify-content: space-between; align-items: baseline; white-space: nowrap; }
+#v1, #v1r { font-size: 18px; line-height: 20px; letter-spacing: .05em; }
+#v1.long { font-size: 14px; }
+#v2label { font-size: 14px; letter-spacing: .1em; }
+#v2 { font-size: 36px; line-height: 32px; letter-spacing: .03em; }
+.ghost { position: absolute; right: 12px; bottom: 3px; font-size: 36px; line-height: 32px; letter-spacing: .03em; opacity: .05; }
+#hintPlate {
+  left: 38px; top: 92px; width: 424px; height: 30px; border-radius: 8px;
+  background: #fbf6ea; border: 1px solid #d6cbb4; color: #3b3326;
+  font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 8px;
+}
+#hintPlate .pill { flex-shrink: 0; background: #2f6fdb; color: #fff; border-radius: 999px; font-size: 11px; letter-spacing: .1em; padding: 2px 10px; line-height: 15px; }
+#hint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.groove { left: 18px; top: 128px; width: 464px; height: 3px; border-radius: 2px; background: #d6cbb4; box-shadow: 0 1px 0 #fffaf0; }
+#keys {
+  left: 20px; top: 138px; width: 460px; height: 202px;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 9px;
+}
+.key {
+  --cap: #fbf8f1; --edge: #c9bfa9; --txt: #2b2a27;
+  appearance: none; border: 0; cursor: pointer; border-radius: 11px; background: var(--cap); color: var(--txt);
+  font-weight: 800; font-size: 22px; line-height: 1;
+  box-shadow: 0 4px 0 var(--edge), 0 6px 8px rgba(60,40,10,.2), inset 0 2px 0 rgba(255,255,255,.55);
+  transition: transform .05s, box-shadow .05s;
+}
+.key.locked { opacity: .42; filter: saturate(.5); }
+.key:active, .key.down { transform: translateY(4px); box-shadow: 0 1px 0 var(--edge), 0 2px 4px rgba(60,40,10,.2), inset 0 2px 0 rgba(255,255,255,.4); }
+.k-clear { --cap: #d93a3f; --edge: #9e2226; --txt: #fff; font-size: 15px; }
+.k-void  { --cap: #f59a36; --edge: #b86a14; --txt: #3a1e00; font-size: 15px; }
+.k-total { --cap: #2f6fdb; --edge: #1f4e9e; --txt: #fff; font-size: 19px; }
+.k-cash  { --cap: #17894d; --edge: #0e5e33; --txt: #fff; font-size: 20px; }
+.key .small { display: block; font-size: 10px; letter-spacing: .14em; opacity: .85; margin-bottom: 2px; }
+.k-bill  { --cap: #c9d8f0; --edge: #8ea6cf; --txt: #1e3a6e; font-size: 18px; outline: 2px dashed rgba(30,58,110,.25); outline-offset: -6px; border-radius: 8px; }
+.glow { animation: glow 1.1s ease-in-out infinite; }
+@keyframes glow { 0%,100% { box-shadow: 0 4px 0 var(--edge), 0 2px 0 0 rgba(255,194,26,0); } 50% { box-shadow: 0 4px 0 var(--edge), 0 2px 0 6px rgba(255,194,26,.95); } }
+
+/* base + drawer */
+#regBase {
+  left: 600px; top: 484px; width: 560px; height: 130px; border-radius: 8px 8px 16px 16px; z-index: 2;
+  background: var(--plastic-dark);
+  box-shadow: inset 0 3px 0 #ebe3d2, inset 0 -6px 0 #bfb39a, 0 10px 14px rgba(50,25,0,.25);
+}
+#regBase .recess { position: absolute; left: 16px; top: 8px; right: 16px; bottom: 12px; border-radius: 6px; background: #241f1a; }
+#drawerClip { left: 620px; top: 490px; width: 520px; height: 210px; overflow: hidden; z-index: 3; }
+#drawer { position: absolute; left: 0; top: -100px; width: 520px; height: 200px; transform: translateY(0); transition: transform .22s ease-in; }
+#drawer.open { transform: translateY(100px); transition: transform .55s cubic-bezier(.22,1.45,.42,1); }
+.tray {
+  height: 100px; background: #3a332c; padding: 5px; display: flex; flex-direction: column; gap: 5px;
+  border-left: 5px solid #cfc3a8; border-right: 5px solid #cfc3a8;
+}
+.trow { flex: 1; display: grid; gap: 5px; }
+.trow.bills { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.trow.coins { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.comp { appearance: none; border: 0; padding: 0; font: inherit; position: relative; background: #26221e; border-radius: 6px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 3px 6px rgba(0,0,0,.55); cursor: default; }
+.comp.live { cursor: pointer; }
+.comp.live:not(.target) { opacity: .4; }
+.comp.target { animation: tgt 0.9s ease-in-out infinite; z-index: 1; }
+@keyframes tgt { 0%,100% { box-shadow: inset 0 3px 6px rgba(0,0,0,.55), 0 0 0 0 rgba(255,194,26,0); } 50% { box-shadow: inset 0 0 0 4px #ffc21a, 0 0 14px 3px rgba(255,194,26,.9); } }
+.comp.live:hover { background: #3a342d; }
+.comp.live:active .coin, .comp.live:active .note { transform: translateY(3px) scale(.94); }
+.comp.nope { animation: shake .4s; }
+.stack { position: relative; display: grid; place-items: center; pointer-events: none; }
+.note { width: 104px; height: 28px; border-radius: 4px; display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+.note.n1000 { background: #c9d8f0; color: #1e3a6e; box-shadow: 0 -3px 0 #afc2e2, 0 -6px 0 #93a9d2; }
+.note.n5000 { background: #dccdeb; color: #46286b; box-shadow: 0 -3px 0 #cbb6e0, 0 -6px 0 #b49acf; }
+.note.n10000 { background: #e8d9be; color: #5a3f12; box-shadow: 0 -3px 0 #dcc8a4, 0 -6px 0 #cbb083; }
+.coin { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; color: rgba(0,0,0,.62); position: relative;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,.2), inset 0 2px 0 rgba(255,255,255,.55), 0 2px 0 rgba(0,0,0,.45); }
+.coin.c500 { background: #d9b451; width: 38px; height: 38px; }
+.coin.c100 { background: #c7cbd1; }
+.coin.c50 { background: #cdd1d6; }
+.coin.c10 { background: #b8743a; color: rgba(255,255,255,.92); }
+.coin.c5 { background: #cfa53c; }
+.coin.c1 { background: #e9ebee; width: 30px; height: 30px; font-size: 10px; }
+.coin.holed { place-items: end center; padding-bottom: 2px; font-size: 9px; }
+.coin.holed::after { content: ''; position: absolute; top: 8px; left: 50%; margin-left: -4px; width: 8px; height: 8px; border-radius: 50%; background: #26221e; box-shadow: inset 0 1px 2px rgba(0,0,0,.6); }
+.dfront {
+  appearance: none; border: 0; width: 520px; height: 100px; cursor: pointer; position: relative;
+  background: #e8dfcb; border-radius: 4px 4px 14px 14px;
+  box-shadow: inset 0 3px 0 #f5efe2, inset 0 -6px 0 #cfc3a8, 0 10px 16px rgba(50,25,0,.3);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; color: #6a5f4c;
+}
+.dfront .handle { width: 200px; height: 14px; border-radius: 8px; background: #b9ad94; box-shadow: inset 0 4px 4px rgba(0,0,0,.25); }
+.dfront .lbl { font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+.dfront.ready .handle { animation: hpulse 1s ease-in-out infinite; }
+.dfront.ready .lbl { color: #17894d; }
+@keyframes hpulse { 50% { box-shadow: inset 0 4px 4px rgba(0,0,0,.25), 0 0 0 5px rgba(23,137,77,.55); } }
+.dfront .lock { position: absolute; right: 30px; top: 16px; width: 20px; height: 20px; border-radius: 50%; background: #c8c2b5; border: 4px solid #9f978a; }
+.dfront .lock::after { content: ''; position: absolute; left: 4px; top: 2px; width: 4px; height: 8px; background: #6b6458; border-radius: 2px; }
+
+/* ================= RECEIPT PRINTER ================= */
+#prTop { left: 1222px; top: 440px; width: 296px; height: 40px; border-radius: 34px 34px 0 0; background: #3e4248; z-index: 1;
+  box-shadow: inset 0 4px 0 #5a5f67; }
+#prTop .slot { position: absolute; left: 22px; right: 22px; bottom: 6px; height: 10px; border-radius: 5px; background: #0b0c0e; }
+#paperClip {
+  left: 1250px; top: 128px; width: 240px; height: 352px; z-index: 2; overflow: hidden; pointer-events: none;
+  display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+  -webkit-mask-image: linear-gradient(transparent 0, #000 50px); mask-image: linear-gradient(transparent 0, #000 50px);
+}
+.paper { pointer-events: auto; width: 228px; transform-origin: 50% 100%; cursor: grab; touch-action: none; position: relative; will-change: transform; filter: drop-shadow(0 4px 6px rgba(0,0,0,.2)); }
+#paperClip.free { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+.paper.grab { cursor: grabbing; }
+.paper.snap { transition: transform .3s cubic-bezier(.3,1.6,.5,1); }
+.paper.wiggle { animation: wiggle 1.6s ease-in-out infinite; }
+.zig { height: 10px; background:
+  linear-gradient(135deg, transparent 5px, #fffefa 0) 0 0 / 10px 10px repeat-x,
+  linear-gradient(225deg, transparent 5px, #fffefa 0) 0 0 / 10px 10px repeat-x; }
+.paper-body { background: #fffefa; padding: 4px 14px 16px; font-family: 'DotGothic16', monospace; font-size: 14px; color: #2b2a27; }
+.pline { display: flex; justify-content: space-between; gap: 10px; line-height: 22px; overflow: hidden; animation: feed .28s steps(4, end) both; }
+.pline > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pline > span:last-child { flex-shrink: 0; }
+.pline.shop { justify-content: center; font-family: 'NH', sans-serif; font-size: 20px; line-height: 28px; text-align: center; }
+.pline.shop { display: block; }
+.pline.shop > span:first-child { white-space: normal; overflow: visible; display: block; }
+.pline.shop > span:last-child { display: none; }
+.pline.meta { font-size: 11px; line-height: 18px; color: #555049; }
+.pline.sub { font-size: 13px; color: #555049; padding-left: 14px; line-height: 18px; }
+.pline.void { color: #9e2226; }
+.pline.big { font-size: 17px; line-height: 26px; }
+.pline.rule { border-top: 2px dashed #bdb7a8; line-height: 0; height: 0; margin: 5px 0; }
+.pline.thanks { justify-content: center; font-family: 'NH', sans-serif; font-size: 20px; line-height: 30px; }
+.pline.blank { line-height: 10px; }
+.pline.barcode { height: 26px; margin: 6px 14px 0; background: repeating-linear-gradient(90deg, #2b2a27 0 2px, transparent 2px 4px, #2b2a27 4px 5px, transparent 5px 8px, #2b2a27 8px 11px, transparent 11px 13px, #2b2a27 13px 14px, transparent 14px 17px); }
+#prFront {
+  left: 1222px; top: 476px; width: 296px; height: 124px; border-radius: 6px 6px 18px 18px; background: #34373c; z-index: 3;
+  box-shadow: inset 0 -6px 0 #24272b, 0 10px 16px rgba(0,0,0,.3);
+}
+.cutter { position: absolute; left: 24px; right: 24px; top: -6px; height: 14px; background: #a8aeb6;
+  -webkit-mask: linear-gradient(#000 0 0) 0 6px / 100% 8px no-repeat, conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) 0 0 / 8px 6px repeat-x;
+  mask: linear-gradient(#000 0 0) 0 6px / 100% 8px no-repeat, conic-gradient(from 135deg at 50% 0, #000 90deg, transparent 0) 0 0 / 8px 6px repeat-x; }
+#prFront .brand { position: absolute; left: 26px; top: 30px; font-size: 13px; font-weight: 800; letter-spacing: .22em; color: #c9ccd1; }
+#prFront .led { position: absolute; right: 30px; top: 32px; width: 11px; height: 11px; border-radius: 50%; background: #42e28a; box-shadow: 0 0 8px #42e28a; }
+#tearTag { position: absolute; left: 20px; bottom: 16px; height: 38px; padding: 0 12px; border-radius: 11px; display: none; align-items: center; gap: 8px;
+  background: #ffc21a; color: #3a2400; font-weight: 800; font-size: 15px; box-shadow: 0 4px 0 #b98700; animation: nudge 1s ease-in-out infinite; }
+#tearTag.on { display: flex; }
+.flypaper { position: absolute; z-index: 60; pointer-events: none; transform-origin: 50% 100%; }
+
+
+/* ================= KIDS MENU ================= */
+.menuwrap { width: min(1040px, 100%); max-height: 94vh; display: flex; flex-direction: column; gap: 10px; animation: pop .25s ease both; }
+.menubar { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
+.menubar .mb-title { margin-right: auto; font-family: 'NH', sans-serif; font-size: 30px; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.4); }
+.menubar .bigbtn { height: 48px; font-size: 18px; padding: 0 24px; background: #2f6fdb; box-shadow: 0 5px 0 #1f4e9e; }
+.mpaper {
+  --p: #ffcc00; --s: #cc0000; --bg: #fff7e3;
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; border-radius: 26px; padding: 22px 26px 26px; color: #2b2a27;
+  border: 10px solid var(--s);
+  background-color: var(--bg);
+  background-image: radial-gradient(color-mix(in srgb, var(--p) 40%, transparent) 3px, transparent 3.5px);
+  background-size: 28px 28px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.4);
+}
+.mp-head { display: flex; align-items: center; justify-content: center; gap: 18px; padding: 8px 0 14px; }
+.mp-logo { width: 96px; height: 96px; border-radius: 22px; object-fit: cover; background: #fff; border: 4px solid var(--s); box-shadow: 0 5px 0 rgba(0,0,0,.18); }
+.mp-ttl { text-align: center; }
+.mp-ttl h1 { margin: 0; font-family: 'NH', sans-serif; font-weight: 500; font-size: 56px; line-height: 1.3; padding-bottom: .1em; color: var(--s); text-shadow: 3px 3px 0 #fff, 5px 5px 0 color-mix(in srgb, var(--p) 70%, transparent); }
+.mp-ttl p { margin: 0; font-weight: 800; font-size: 18px; color: #6e5e3e; }
+.mp-d { font-size: 54px; line-height: 1; animation: hop 2.2s ease-in-out infinite; }
+.mp-d.r { animation-delay: 1.1s; }
+.mp-say { width: max-content; max-width: 100%; margin: 0 auto 8px; padding: 8px 22px 10px; background: #fff; border: 3px solid var(--s); border-radius: 999px; font-weight: 800; font-size: 20px; text-align: center; }
+.mp-say b { font-family: 'NH', sans-serif; font-weight: 500; font-size: 24px; color: var(--s); }
+.mp-sec { margin-top: 18px; }
+.mp-rib { position: relative; width: max-content; max-width: 100%; margin: 0 auto 16px; padding: 4px 34px 8px; font-family: 'NH', sans-serif; font-weight: 500; font-size: 34px; line-height: 1.3;
+  background: var(--s); color: #fff; border-radius: 14px; box-shadow: 0 5px 0 rgba(0,0,0,.2); display: flex; gap: 12px; align-items: center; }
+.mp-rib span { font-size: 30px; }
+.mp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+.mp-item { background: #fff; border: 4px dashed var(--s); border-radius: 22px; padding: 10px 10px 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 5px 0 rgba(0,0,0,.12); break-inside: avoid; }
+.mp-item.t0 { transform: rotate(-1.2deg); } .mp-item.t2 { transform: rotate(1.2deg); }
+.mp-pic { width: 100%; aspect-ratio: 1; border-radius: 14px; background: color-mix(in srgb, var(--p) 22%, #fff); display: grid; place-items: center; overflow: hidden; }
+.mp-pic img { width: 88%; height: 88%; object-fit: contain; }
+.mp-sets { width: 100%; aspect-ratio: 1; border-radius: 14px; background: color-mix(in srgb, var(--p) 22%, #fff); display: flex; align-items: center; justify-content: center; gap: 4px; padding: 6px; }
+.mp-sets img { width: 32%; object-fit: contain; }
+.mp-name { font-family: 'NH', sans-serif; font-size: 22px; line-height: 1.3; padding-bottom: .1em; text-align: center; overflow-wrap: anywhere; }
+.mp-name.sm { font-size: 17px; }
+.mp-price { background: var(--s); color: #fff; font-weight: 800; font-size: 22px; line-height: 1.2; padding: 3px 18px 5px; border-radius: 999px; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
+.mp-foot { margin-top: 22px; text-align: center; font-family: 'NH', sans-serif; font-size: 26px; color: var(--s); }
+
+@media print {
+  @page { size: A4; margin: 7mm; }
+  html, body { background: #fff !important; overflow: visible !important; height: auto !important; }
+  body > *:not(#menuModal) { display: none !important; }
+  #menuModal { position: static !important; display: block !important; background: none !important; padding: 0 !important; }
+  .menuwrap { width: auto !important; max-height: none !important; animation: none !important; }
+  .noprint { display: none !important; }
+  .mpaper { overflow: visible !important; box-shadow: none !important; border-radius: 12px; padding: 12px 14px; border-width: 6px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .mpaper * { -webkit-print-color-adjust: exact; print-color-adjust: exact; animation: none !important; }
+  .mp-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mp-item { box-shadow: none; padding: 6px 6px 8px; border-width: 3px; }
+  .mp-item.t0, .mp-item.t2 { transform: none; }
+  .mp-ttl h1 { font-size: 40px; } .mp-logo { width: 70px; height: 70px; } .mp-d { font-size: 38px; }
+  .mp-rib { font-size: 26px; margin-bottom: 10px; break-after: avoid; } .mp-sec { margin-top: 12px; }
+  .mp-name { font-size: 16px; } .mp-name.sm { font-size: 13px; } .mp-price { font-size: 16px; }
+}
+
+/* ================= MODALS ================= */
+.modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(30,20,10,.55); padding: 20px; }
+.modal.on { display: flex; }
+.sheet { background: var(--panel); border: 8px solid var(--accent); border-radius: 24px; max-width: 960px; width: 100%; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.35); animation: pop .25s ease both; }
+.sheet-head { display: flex; align-items: center; gap: 14px; padding: 18px 22px 10px; }
+.sheet-head h2 { margin: 0; flex-grow: 1; font-family: 'NH', sans-serif; font-weight: 500; font-size: 40px; line-height: 1.25; }
+.sheet-head img { width: 60px; height: 60px; border-radius: 14px; object-fit: cover; }
+.xbtn { appearance: none; border: 0; cursor: pointer; width: 48px; height: 48px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 3px 0 rgba(0,0,0,.2); flex-shrink: 0; }
+.sheet-body { padding: 8px 22px 22px; overflow-y: auto; }
+.sheet .tabs { padding: 0 22px 12px; }
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.mgrid .card { cursor: default; }
+.mgrid.pick .card { cursor: pointer; }
+.setsteps { display: flex; gap: 8px; padding: 0 22px 12px; }
+.setsteps .tab { cursor: default; }
+.namerow { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 20px 0 10px; }
+.namerow .preview { display: flex; gap: 10px; }
+.namerow .preview img { width: 96px; height: 96px; object-fit: contain; background: #fff; border-radius: 16px; padding: 6px; box-shadow: 0 4px 0 rgba(0,0,0,.1); }
+.namerow input { font-family: 'NH', sans-serif; font-size: 30px; padding: 10px 18px; border-radius: 14px; border: 3px solid var(--accent); width: min(480px, 100%); text-align: center; outline: none; background: #fff; }
+.bigbtn { appearance: none; border: 0; cursor: pointer; height: 58px; padding: 0 30px; border-radius: 16px; font-size: 20px; font-weight: 800; background: #17894d; color: #fff; box-shadow: 0 5px 0 #0e5e33; }
+.bigbtn:disabled { opacity: .45; cursor: default; }
+.bigbtn:not(:disabled):active { transform: translateY(4px); box-shadow: 0 1px 0 #0e5e33; }
+.setprice { font-weight: 800; font-size: 20px; color: #6e5e3e; }
+.setprice b { color: #b42318; font-size: 26px; }
+#qrModal .sheet { max-width: 520px; align-items: center; padding: 24px; }
+#qrModal img { width: 100%; max-width: 420px; image-rendering: pixelated; }
+
+/* what to do next: glowing targets */
+@keyframes ringpulse { 0%, 100% { outline-color: rgba(255,214,10,.1); } 50% { outline-color: rgba(255,214,10,1); } }
+@keyframes trayglow { 50% { box-shadow: inset 0 0 0 5px #ffc21a; } }
+.focus-menu #menuStand .board { outline: 7px solid transparent; outline-offset: 5px; animation: ringpulse 1.2s ease-in-out infinite; }
+.focus-keypad .key.num, .focus-keypad .k-bill { animation: glow 1.1s ease-in-out infinite; }
+.focus-coins .tray { animation: trayglow 1s ease-in-out infinite; }
+.focus-paper #prFront { outline: 6px solid transparent; outline-offset: 4px; border-radius: 6px 6px 18px 18px; animation: ringpulse 1.2s ease-in-out infinite; }
+@keyframes retract { from { max-height: 60px; opacity: 1; } to { max-height: 0; opacity: 0; } }
+
+/* big "say it" window */
+#say { position: absolute; inset: 0; z-index: 90; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 34px; background: rgba(24,14,4,.78); }
+#say.on { display: flex; animation: fadein .2s ease both; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.saywrap { display: flex; align-items: center; gap: 40px; width: min(1320px, 90%); }
+.saywrap.cust { flex-direction: row-reverse; }
+.sayavatar { width: 230px; height: 230px; flex-shrink: 0; border-radius: 50%; background: #fff; box-shadow: 0 8px 0 rgba(0,0,0,.25); overflow: hidden; }
+.sayavatar svg { width: 100%; height: 100%; display: block; }
+.saybubble { position: relative; flex-grow: 1; min-height: 250px; background: #fffdf6; border-radius: 48px; padding: 62px 64px 52px; box-shadow: 0 10px 0 rgba(0,0,0,.22), 0 24px 50px rgba(0,0,0,.35); display: flex; align-items: center; }
+.saybubble::after { content: ''; position: absolute; top: 96px; width: 0; height: 0; border: 34px solid transparent; }
+.saywrap.cash .saybubble::after { left: -64px; border-right-color: #fffdf6; }
+.saywrap.cust .saybubble::after { right: -64px; border-left-color: #fffdf6; }
+.saywho { position: absolute; top: -26px; left: 48px; font-size: 28px; font-weight: 800; letter-spacing: .12em; padding: 6px 26px; border-radius: 999px; background: #2b2a27; color: #fff; box-shadow: 0 5px 0 rgba(0,0,0,.25); }
+.saywrap.cust .saywho { background: #ffc21a; color: #3a2400; }
+.saytext { font-family: 'NH', sans-serif; font-weight: 500; line-height: 1.3; color: #2b2a27; padding-bottom: .1em; }
+.saytext .blank { display: inline-block; min-width: 280px; height: .8em; border-bottom: 9px dashed #c9b88a; margin: 0 .12em; }
+.saysub { display: flex; align-items: center; gap: 12px; font-size: 30px; font-weight: 800; color: #fff7e3; text-shadow: 0 2px 0 rgba(0,0,0,.4); }
+.saybtns { display: flex; gap: 22px; }
+.saybtn { appearance: none; border: 0; cursor: pointer; height: 84px; padding: 0 44px; border-radius: 24px; font-size: 32px; font-weight: 800; display: inline-flex; align-items: center; gap: 14px; background: #fffdf6; color: #2b2a27; box-shadow: 0 7px 0 #bdb396; }
+.saybtn.go { background: #17894d; color: #fff; box-shadow: 0 7px 0 #0e5e33; padding: 0 64px; font-size: 38px; }
+.saybtn:active { transform: translateY(6px); box-shadow: 0 1px 0 rgba(0,0,0,.3); }
+.wallbtn.off { opacity: .6; }
+@keyframes shake { 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(3px); } }
+@keyframes hop { 50% { transform: translateY(-6px) scale(1.08); } }
+@keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes feed { from { max-height: 0; opacity: .2; } to { max-height: 90px; opacity: 1; } }
+@keyframes wiggle { 0%, 70%, 100% { transform: rotate(0); } 78% { transform: rotate(-2.5deg); } 86% { transform: rotate(2deg); } 93% { transform: rotate(-1deg); } }
+@keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+</style>
+</head>
+<body>
+
+<!-- ============ RESTAURANT PICKER ============ -->
+<div id="picker">
+  <h1>Which restaurant today?</h1>
+  <div class="street" id="street"></div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div id="app">
+  <div id="stage">
+    <div id="wall" class="abs"></div>
+    <div id="countertop" class="abs"></div>
+    <div id="counterfront" class="abs"></div>
+
+    <button class="wallbtn abs" style="left: 20px; top: 16px; z-index: 95" onclick="backToPicker()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>Back
+    </button>
+    <div class="abs" style="right: 20px; top: 16px; display: flex; gap: 8px; z-index: 95">
+      <button class="wallbtn" onclick="openMenuMode()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 9h6M9 13h6"/></svg>Menu
+      </button>
+      <button class="wallbtn" onclick="openQR()">QR Code</button>
+      <button class="wallbtn" id="speakBtn" onclick="toggleSpeak()" aria-label="Speaking prompts"></button>
+      <button class="wallbtn icon" id="fsBtn" onclick="toggleFS()" aria-label="Full screen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      <button class="wallbtn icon" id="soundBtn" onclick="toggleSound()" aria-label="Turn sound off"></button>
+    </div>
+
+    <div id="sign" class="abs">
+      <img id="signLogo" alt="" style="display: none">
+      <div id="signName" contenteditable="true" spellcheck="false">Restaurant</div>
+    </div>
+
+    <div id="talk" class="abs"></div>
+
+    <!-- menu stand -->
+    <div id="menuStand" class="abs">
+      <div class="stshadow"></div>
+      <div class="foot" style="left: 90px"></div>
+      <div class="foot" style="right: 90px"></div>
+      <div class="board"><div class="board-inner">
+        <div class="menuhead"><img id="menuLogo" alt="" style="display: none"><h2>Menu</h2></div>
+        <div class="tabs" id="tabs"></div>
+        <div id="grid"></div>
+      </div></div>
+      <div class="clip abs"></div>
+    </div>
+
+    <div id="rg">
+    <!-- register -->
+    <div class="floorshadow abs" style="left: 570px; top: 596px; width: 620px; height: 36px"></div>
+    <div id="regBase" class="abs hit"><div class="recess"></div></div>
+    <div id="drawerClip" class="abs hit">
+      <div id="drawer">
+        <div class="tray">
+          <div class="trow bills" id="trayBills"></div>
+          <div class="trow coins" id="trayCoins"></div>
+        </div>
+        <button class="dfront" onclick="closeDrawer()" aria-label="Cash drawer">
+          <span class="handle"></span>
+          <span class="lbl" id="drawerLbl">CASH DRAWER</span>
+          <span class="lock"></span>
+        </button>
+      </div>
+    </div>
+    <div id="regBody" class="abs hit">
+      <div class="bezel abs">
+        <div id="vfd" aria-live="polite">
+          <div class="vrow"><span id="v1">WELCOME!</span><span id="v1r"></span></div>
+          <div class="vrow"><span id="v2label">SUBTOTAL</span><span id="v2">¥0</span></div>
+          <span class="ghost" aria-hidden="true">88888888</span>
+        </div>
+      </div>
+      <div id="hintPlate" class="abs"><span class="pill" id="hintPill">TAP</span><span id="hint">the main dish</span></div>
+      <div class="groove abs"></div>
+      <div id="keys" class="abs">
+        <button class="key k-clear" style="grid-column: 4; grid-row: 1" onclick="keyClear()">CLEAR</button>
+        <button class="key k-void" id="kVoid" style="grid-column: 5; grid-row: 1" onclick="keyVoid()">VOID</button>
+        <button class="key k-bill" style="grid-column: 4 / 6; grid-row: 2" onclick="key1000()">¥1,000</button>
+        <button class="key k-total" id="kTotal" style="grid-column: 4 / 6; grid-row: 3" onclick="keyTotal()">TOTAL</button>
+        <button class="key k-cash" id="kCash" style="grid-column: 4 / 6; grid-row: 4" onclick="keyCash()"><span class="small">ENTER</span>CASH</button>
+        <button class="key num" onclick="keyNum('7')">7</button>
+        <button class="key num" onclick="keyNum('8')">8</button>
+        <button class="key num" onclick="keyNum('9')">9</button>
+        <button class="key num" onclick="keyNum('4')">4</button>
+        <button class="key num" onclick="keyNum('5')">5</button>
+        <button class="key num" onclick="keyNum('6')">6</button>
+        <button class="key num" onclick="keyNum('1')">1</button>
+        <button class="key num" onclick="keyNum('2')">2</button>
+        <button class="key num" onclick="keyNum('3')">3</button>
+        <button class="key num" onclick="keyNum('0')">0</button>
+        <button class="key num" onclick="keyNum('00')">00</button>
+        <button class="key num" onclick="keyNum('000')">000</button>
+      </div>
+    </div>
+
+    <!-- receipt printer -->
+    <div class="floorshadow abs" style="left: 1200px; top: 584px; width: 340px; height: 34px"></div>
+    <div id="prTop" class="abs hit"><div class="slot"></div></div>
+    <div id="paperClip" class="abs"></div>
+    <div id="prFront" class="abs hit">
+      <div class="cutter"></div>
+      <span class="brand">RECEIPT</span>
+      <span class="led"></span>
+      <div id="tearTag">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+        Tear it off!
+      </div>
+    </div>
+    </div><!-- /rg -->
+
+    <!-- big "say it" window -->
+    <div id="say" role="dialog" aria-live="assertive" aria-label="Say this line">
+      <div class="saywrap cash" id="sayWrap">
+        <div class="sayavatar" id="sayAvatar"></div>
+        <div class="saybubble"><span class="saywho" id="sayWho">CASHIER</span><div class="saytext" id="sayText"></div></div>
+      </div>
+      <div class="saysub"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg><span id="saySub">Say it out loud!</span></div>
+      <div class="saybtns">
+        <button class="saybtn" id="sayListen" onclick="sayListen()">Listen</button>
+        <button class="saybtn go" id="sayNext" onclick="sayNext()">I said it!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal" id="menuModal" onclick="if (event.target === this) closeModal('menuModal')">
+  <div class="menuwrap">
+    <div class="menubar noprint">
+      <span class="mb-title">Menu</span>
+      <button class="bigbtn" onclick="printMenu()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:8px"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></svg>Print</button>
+      <button class="xbtn" onclick="closeModal('menuModal')" aria-label="Close menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="mpaper" id="menuPaper"></div>
+  </div>
+</div>
+
+<div class="modal" id="setModal" onclick="if (event.target === this) closeModal('setModal')">
+  <div class="sheet">
+    <div class="sheet-head"><h2 id="setTitle">Create a set</h2>
+      <button class="xbtn" onclick="closeModal('setModal')" aria-label="Cancel"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="setsteps" id="setSteps"></div>
+    <div class="sheet-body" id="setBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="qrModal" onclick="closeModal('qrModal')">
+  <div class="sheet"><img src="qrcode.png" alt="QR code"></div>
+</div>
+
+<script>
+/* ===================== DATA ===================== */
+const restaurantKeys = ['horizon', 'kirbycafe', 'pokemon', 'Rilakkuma'];
+const restaurants = {};
+const CATS = ['main', 'dessert', 'drink'];
+const CAT_LABEL = { set: 'Sets', main: 'Main', dessert: 'Dessert', drink: 'Drink' };
+const DEN = [
+  { v: 10000, kind: 'bill', label: '¥10,000', cls: 'n10000' },
+  { v: 5000, kind: 'bill', label: '¥5,000', cls: 'n5000' },
+  { v: 1000, kind: 'bill', label: '¥1,000', cls: 'n1000' },
+  { v: 500, kind: 'coin', label: '500', cls: 'c500' },
+  { v: 100, kind: 'coin', label: '100', cls: 'c100' },
+  { v: 50, kind: 'coin', label: '50', cls: 'c50 holed' },
+  { v: 10, kind: 'coin', label: '10', cls: 'c10' },
+  { v: 5, kind: 'coin', label: '5', cls: 'c5 holed' },
+  { v: 1, kind: 'coin', label: '1', cls: 'c1' }
+];
+
+async function loadRestaurants() {
+  for (const key of restaurantKeys) {
+    try {
+      const res = await fetch(`restaurants/${key}/menu.json`);
+      const data = await res.json();
+      let logoPath = null;
+      for (const ext of ['png', 'jpg', 'jpeg', 'webp']) {
+        const p = `restaurants/${key}/logo.${ext}`;
+        try { const r = await fetch(p, { method: 'HEAD' }); if (r.ok) { logoPath = p; break; } } catch (e) {}
+      }
+      restaurants[key] = { ...data, key, folder: `restaurants/${key}/`, logoPath };
+    } catch (err) {
+      console.error(`Failed to load ${key}:`, err);
+    }
+  }
+}
+
+/* ===================== STATE ===================== */
+const S = {
+  r: null, products: {}, cart: [], step: 0, phase: 'select', input: '', paid: 0, last: null,
+  err: false, drawer: false, tab: 'main', orderNo: 1, printed: false, sound: true, given: 0, msg: '', voids: 0, said: {}, speak: true
+};
+const MAXV = 2;            // voids allowed per order
+let uidN = 0, busyUntil = 0, greetT = null;
+const busy = () => Date.now() < busyUntil;
+const $ = (id) => document.getElementById(id);
+const yen = (n) => '¥' + Number(n || 0).toLocaleString('en-US');
+const total = () => S.cart.reduce((a, it) => a + it.price, 0);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ===================== SCALE STAGE ===================== */
+let scale = 1, STW = 1560, STH = 700;
+function fit() {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  scale = Math.min(vw / 1560, vh / 700);
+  STW = Math.max(1560, Math.round(vw / scale)); STH = Math.max(700, Math.round(vh / scale));
+  const st = $('stage');
+  st.style.width = STW + 'px'; st.style.height = STH + 'px';
+  st.style.transform = `scale(${scale})`;
+  st.style.setProperty('--dx', (STW - 1560) + 'px'); st.style.setProperty('--dy', (STH - 700) + 'px');
+  const menuInner = (530 + STW - 1560) - 22 - 28 - 14;       // room for the food cards
+  st.style.setProperty('--cols', Math.max(3, Math.min(6, Math.round(menuInner / 170))));
+}
+window.addEventListener('resize', fit);
+function toggleFS() {
+  const d = document.documentElement;
+  if (document.fullscreenElement) document.exitFullscreen(); else if (d.requestFullscreen) d.requestFullscreen().catch(() => {});
+}
+if (!document.fullscreenEnabled) document.addEventListener('DOMContentLoaded', () => { const b = document.getElementById('fsBtn'); if (b) b.style.display = 'none'; });
+document.addEventListener('touchstart', () => {}, { passive: true }); // enables :active on iOS
+
+/* ===================== SOUND ===================== */
+let ac = null;
+function actx() {
+  if (!S.sound) return null;
+  try {
+    if (!ac) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; ac = new A(); }
+    if (ac.state === 'suspended') ac.resume();
+    return ac;
+  } catch (e) { return null; }
+}
+function tone(f, dur, type, vol, delay, fEnd) {
+  const a = actx(); if (!a) return;
+  const t = a.currentTime + (delay || 0);
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = type || 'sine'; o.frequency.setValueAtTime(f, t);
+  if (fEnd) o.frequency.exponentialRampToValueAtTime(fEnd, t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol || 0.1, t + 0.006);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.05);
+}
+function noise(dur, freq, vol, delay, q) {
+  const a = actx(); if (!a) return;
+  const t = a.currentTime + (delay || 0);
+  const len = Math.max(1, Math.floor(a.sampleRate * dur));
+  const b = a.createBuffer(1, len, a.sampleRate); const d = b.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const s = a.createBufferSource(); s.buffer = b;
+  const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q || 1.2;
+  const g = a.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  s.connect(f); f.connect(g); g.connect(a.destination); s.start(t);
+}
+const sClick = () => { tone(1500, 0.03, 'square', 0.035); noise(0.025, 2600, 0.08); };
+const sBeep = () => tone(1975, 0.13, 'sine', 0.13);
+const sError = () => { tone(196, 0.16, 'square', 0.06); tone(147, 0.24, 'square', 0.06, 0.17); };
+const sPrintTick = () => noise(0.035, 3200, 0.1);
+const sKaching = () => {
+  noise(0.28, 480, 0.3);
+  tone(2637, 1.1, 'sine', 0.12, 0.1); tone(3951, 0.9, 'sine', 0.06, 0.1);
+  tone(3136, 1.3, 'sine', 0.1, 0.22); tone(5274, 0.7, 'sine', 0.035, 0.22);
+};
+const sThunk = () => { tone(150, 0.16, 'sine', 0.3, 0, 60); noise(0.09, 320, 0.22); };
+const sRip = () => { for (let i = 0; i < 9; i++) noise(0.04 + Math.random() * 0.03, 1400 + Math.random() * 2400, 0.22, i * 0.022 + Math.random() * 0.01, 0.8); };
+const sStretch = () => noise(0.05, 900, 0.05);
+
+function toggleSound() { S.sound = !S.sound; drawSoundBtn(); if (S.sound) sClick(); }
+function drawSoundBtn() {
+  const on = S.sound;
+  $('soundBtn').setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+  $('soundBtn').innerHTML = on
+    ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>'
+    : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
+}
+
+/* ===================== PICKER ===================== */
+function renderPicker() {
+  const street = $('street');
+  street.innerHTML = '';
+  Object.values(restaurants).forEach((r) => {
+    const b = document.createElement('button');
+    b.className = 'storefront';
+    b.style.setProperty('--c1', r.theme.primary);
+    b.style.setProperty('--c2', r.theme.secondary);
+    b.innerHTML = `
+      <div class="awning"></div>
+      <div class="shopfront">
+        ${r.logoPath ? `<img src="${r.logoPath}" alt="">` : `<div class="emoji">${r.icon || '🍽️'}</div>`}
+        <h2>${esc(r.name)}</h2>
+        <p>${esc(r.description || '')}</p>
+      </div>`;
+    b.onclick = () => openRestaurant(r.key);
+    street.appendChild(b);
+  });
+}
+
+function openRestaurant(key) {
+  const r = restaurants[key];
+  S.r = r;
+  S.products = {};
+  ['set', 'main', 'dessert', 'drink'].forEach((c) => {
+    S.products[c] = (r.categories[c] || []).map((it) => ({
+      ...it,
+      image: it.image ? r.folder + it.image : null,
+      items: it.items ? it.items.map((x) => ({ ...x, image: x.image ? r.folder + x.image : null })) : undefined
+    }));
+  });
+  const root = document.documentElement.style;
+  root.setProperty('--wall', r.theme.primary);
+  root.setProperty('--accent', r.theme.secondary);
+  root.setProperty('--panel', r.theme.productsPanel || '#fff7e3');
+  ['signLogo', 'menuLogo'].forEach((id) => {
+    const el = $(id);
+    if (r.logoPath) { el.src = r.logoPath; el.style.display = ''; } else { el.style.display = 'none'; }
+  });
+  $('signName').textContent = r.name;
+  document.title = r.name;
+  setTimeout(fitSign, 0);
+  $('picker').style.display = 'none';
+  $('app').classList.add('on');
+  fit();
+  resetOrder(true);
+}
+
+function backToPicker() {
+  closeModal('menuModal'); closeModal('setModal'); closeSay(); clearTimeout(greetT);
+  $('app').classList.remove('on');
+  $('picker').style.display = 'flex';
+  document.title = 'Restaurant';
+}
+
+function fitSign() {
+  const el = $('signName');
+  let fs = 36; el.style.fontSize = fs + 'px';
+  while (el.scrollWidth > 420 && fs > 20) { fs -= 2; el.style.fontSize = fs + 'px'; }
+}
+$('signName').addEventListener('input', () => { document.title = $('signName').textContent; fitSign(); });
+$('signName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
+
+/* ===================== ORDER FLOW ===================== */
+function resetOrder(fresh, greetDelay) {
+  S.cart = []; S.step = 0; S.phase = 'select'; S.input = ''; S.paid = 0; S.last = null;
+  S.err = false; S.tab = 'main'; S.printed = false; S.given = 0; S.msg = ''; S.voids = 0; S.said = {};
+  if (S.drawer) { S.drawer = false; }
+  $('drawer').classList.remove('open');
+  if (fresh) { printQueue.length = 0; newPaper(); }
+  renderMenu(); updateUI();
+  clearTimeout(greetT); greetT = setTimeout(greet, greetDelay == null ? 350 : greetDelay);
+}
+
+function pick(item, sourceImg) {
+  if (busy()) return;
+  if (S.phase !== 'select' || S.step >= 3) { sError(); return; }
+  busyUntil = Date.now() + 650;
+  sBeep();
+  if (sourceImg) flyToPrinter(sourceImg);
+  if (!S.printed) printHeader();
+  const entry = { ...item, uid: ++uidN };
+  S.cart.push(entry);
+  S.last = entry;
+  S.step = item.items ? 3 : S.step + 1;
+  if (S.step < 3) S.tab = CATS[S.step];
+  queueLines([['item', item.name, yen(item.price)]].concat(
+    item.items ? item.items.filter(Boolean).map((x) => ['sub', '+ ' + x.name, '']) : []
+  ), entry.uid);
+  renderMenu(); updateUI();
+  // what to say next (once per order)
+  if (S.step < 3) {
+    const k = CATS[S.step];
+    if (!S.said[k]) { S.said[k] = true; later(() => say([{ who: 'cash', text: PROMPT[k] }, { who: 'cust', text: "I'd like ___, please." }]), 650); }
+  } else if (!S.said.howmuch) {
+    S.said.howmuch = true; later(() => say([{ who: 'cust', text: 'How much is it?' }]), 650);
+  }
+}
+function later(fn, ms) { setTimeout(() => { if ($('app').classList.contains('on')) fn(); }, ms); }
+
+function keyNum(k) {
+  sClick();
+  if (S.phase !== 'pay') { nudgeHint(); return; }
+  let v = S.input + k;
+  if (v.length > 6) return;
+  v = String(parseInt(v, 10) || 0);
+  if (parseInt(v, 10) > 1000) { v = '1000'; flashHint('The most is ¥1,000.', 1800); }
+  S.input = v === '0' ? '' : v;
+  S.err = false; updateUI();
+}
+function key1000() {
+  sClick();
+  if (S.phase !== 'pay') { nudgeHint(); return; }
+  S.input = '1000'; S.err = false; updateUI();
+}
+function keyClear() { sClick(); if (S.phase === 'pay') { S.input = ''; S.err = false; updateUI(); } }
+function keyVoid() {
+  sClick();
+  if (S.phase !== 'select' || !S.cart.length) { nudgeHint(); return; }
+  if (busy()) return;
+  if (S.voids >= MAXV) { sError(); flashHint('No more voids! Tear off the receipt.', 3200); return; }
+  busyUntil = Date.now() + 650;
+  S.voids++;
+  const it = S.cart.pop();
+  S.step = S.cart.length ? S.step - (it.items ? 3 : 1) : 0;
+  if (S.step < 0) S.step = 0;
+  S.tab = CATS[Math.min(S.step, 2)];
+  S.last = S.cart[S.cart.length - 1] || null;
+  retract(it.uid);                      // the line rolls back into the printer: the receipt never grows
+  renderMenu(); updateUI();
+}
+function keyTotal() {
+  sClick();
+  if (S.phase !== 'select') return;
+  if (!S.cart.length) { sError(); nudgeHint(); return; }
+  S.phase = 'pay'; S.input = '';
+  queueLines([['rule', '', ''], ['big', 'TOTAL', yen(total())]]);
+  renderMenu(); updateUI();
+  if (!S.said.pay) { S.said.pay = true; const t = total(); later(() => say([{ who: 'cash', text: t + ' yen, please.' }, { who: 'cust', text: 'Here you are.' }]), 350); }
+}
+function keyCash() {
+  if (S.phase !== 'pay') { sClick(); nudgeHint(); return; }
+  const paid = parseInt(S.input || '0', 10);
+  if (paid < total()) {
+    sError(); S.err = true; updateUI();
+    setTimeout(() => { S.err = false; updateUI(); }, 900);
+    return;
+  }
+  sKaching();
+  S.paid = paid; S.phase = 'done'; S.drawer = true; S.given = 0;
+  $('drawer').classList.add('open');
+  queueLines([
+    ['item', 'CASH', yen(paid)],
+    ['big', 'CHANGE', yen(paid - total())],
+    ['rule', '', ''],
+    ['thanks', 'Thank you!', ''],
+
+    ['blank', '', '']
+  ]);
+  renderMenu(); updateUI();
+  if (!S.said.change) {
+    S.said.change = true; const ch = paid - total();
+    later(() => say([{ who: 'cash', text: ch > 0 ? 'Your change is ' + ch + ' yen.' : "That's perfect! No change." }]), 900);
+  }
+}
+const nextDen = () => { const left = owed() - S.given; const d = DEN.find((x) => x.v <= left); return d ? d.v : 0; };
+const owed = () => (S.phase === 'done' ? S.paid - total() : 0);
+function flashHint(t, ms) {
+  S.msg = t; updateUI(); nudgeHint();
+  clearTimeout(flashHint.t);
+  flashHint.t = setTimeout(() => { S.msg = ''; updateUI(); }, ms || 2200);
+}
+function closeDrawer() {
+  if (!S.drawer) return;
+  if (S.given < owed()) { sError(); flashHint('Give the change first! Click coins.'); return; }
+  sThunk(); S.drawer = false; $('drawer').classList.remove('open'); updateUI();
+}
+const sClink = (v) => { const f = v >= 500 ? 3400 : v >= 100 ? 3000 : v >= 10 ? 2500 : 3700; tone(f, 0.22, 'sine', 0.1); tone(f * 1.5, 0.16, 'sine', 0.04, 0.02); noise(0.03, 5000, 0.05); };
+const sNote = () => { noise(0.14, 2200, 0.12, 0, 0.5); };
+function giveMoney(d, comp) {
+  if (!S.drawer || S.phase !== 'done') return;
+  const nd = nextDen();
+  if (d.v !== nd) {
+    sError(); comp.classList.remove('nope'); void comp.offsetWidth; comp.classList.add('nope');
+    flashHint(d.v > nd ? "Too big! Use the biggest coin that fits." : "Start with a bigger coin!", 2600);
+    return;
+  }
+  S.given += d.v;
+  if (d.kind === 'bill') sNote(); else sClink(d.v);
+  flyMoney(comp.firstElementChild);
+  if (S.given === owed()) setTimeout(() => { tone(1318, 0.18, 'sine', 0.1); tone(1760, 0.3, 'sine', 0.1, 0.12); }, 380);
+  S.msg = ''; updateUI();
+}
+function flyMoney(el) {
+  const p = stagePoint(el.getBoundingClientRect());
+  const f = el.cloneNode(true);
+  f.className = el.className + ' fly';
+  Object.assign(f.style, { left: p.x + 'px', top: p.y + 'px', margin: 0, transition: 'none', zIndex: 70 });
+  $('stage').appendChild(f);
+  const cb = document.querySelector('#talk .say.cust .bubble') || $('talk');
+  const ct = stagePoint(cb.getBoundingClientRect());
+  const tx = ct.x + ct.w / 2 - (p.x + p.w / 2), ty = ct.y + ct.h / 2 - (p.y + p.h / 2);
+  const a = f.animate([
+    { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1, offset: 0 },
+    { transform: `translate(${tx * 0.45}px, ${ty * 0.45 - 120}px) scale(1.25) rotate(200deg)`, opacity: 1, offset: 0.5 },
+    { transform: `translate(${tx}px, ${ty}px) scale(.55) rotate(380deg)`, opacity: 0, offset: 1 }
+  ], { duration: 760, easing: 'cubic-bezier(.3,.1,.5,1)', fill: 'forwards' });
+  a.onfinish = () => f.remove();
+  setTimeout(() => {
+    const b = $('talk').lastElementChild;
+    if (b) b.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.08)' }, { transform: 'scale(1)' }], { duration: 220 });
+  }, 700);
+}
+function nudgeHint() {
+  const h = $('hintPlate');
+  h.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 260 });
+}
+
+/* ===================== MENU STAND ===================== */
+function renderMenu() {
+  const tabs = $('tabs');
+  tabs.innerHTML = '';
+  const selecting = S.phase === 'select' && S.step < 3;
+  ['set'].concat(CATS).forEach((c, idx) => {
+    const i = idx - 1;
+    const b = document.createElement('button');
+    b.className = 'tab';
+    let enabled;
+    if (c === 'set') enabled = selecting && S.step === 0;
+    else {
+      const done = S.step > i;
+      const now = selecting && S.step === i;
+      if (done) b.classList.add('done');
+      if (now) b.classList.add('now');
+      enabled = now;
+      if (done) b.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    }
+    if (selecting && S.tab === c) b.classList.add('active');
+    b.insertAdjacentHTML('beforeend', `<span>${CAT_LABEL[c]}</span>`);
+    b.disabled = !enabled;
+    b.onclick = () => { sClick(); S.tab = c; renderMenu(); };
+    tabs.appendChild(b);
+  });
+
+  const grid = $('grid');
+  grid.innerHTML = '';
+  grid.scrollTop = 0;
+  if (!selecting) {
+    const title = S.phase === 'done' ? 'Paid!' : 'Order complete';
+    const sub = S.phase === 'select' ? 'Press TOTAL on the register' : S.phase === 'pay' ? 'Waiting for the money…' : 'Give the change and tear off the receipt';
+    grid.innerHTML = `<div class="done-panel"><div class="tick"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="big">${title}</div><div class="small">${sub}</div></div>`;
+    return;
+  }
+  if (S.tab === 'set') {
+    const nb = document.createElement('button');
+    nb.className = 'card newset';
+    nb.innerHTML = `<img class="pic" src="restaurants/new.png" alt=""><span class="nm">Create New Set</span>`;
+    nb.onclick = () => { sClick(); openSetModal(); };
+    grid.appendChild(nb);
+  }
+  const list = S.products[S.tab] || [];
+  list.forEach((it) => grid.appendChild(makeCard(it, true)));
+  if (S.tab !== 'set' && !list.length) grid.insertAdjacentHTML('beforeend', '<div class="empty-note">Nothing here yet</div>');
+}
+
+function makeCard(it, clickable) {
+  const b = document.createElement(clickable ? 'button' : 'div');
+  b.className = 'card';
+  const pics = it.items
+    ? `<span class="sets">${it.items.filter(Boolean).map((x) => `<img src="${x.image}" alt="">`).join('')}</span>`
+    : `<img class="pic" src="${it.image}" alt="">`;
+  const nl = it.name.length > 22 ? 'l2' : it.name.length > 14 ? 'l1' : '';
+  b.innerHTML = `${pics}<span class="nm ${nl}">${esc(it.name)}</span><span class="pr">${yen(it.price)}</span>`;
+  if (clickable) b.onclick = () => pick(it, b.querySelector('img'));
+  return b;
+}
+
+function stagePoint(rect) {
+  const s = $('stage').getBoundingClientRect();
+  return { x: (rect.left - s.left) / scale, y: (rect.top - s.top) / scale, w: rect.width / scale, h: rect.height / scale };
+}
+function flyToPrinter(img) {
+  const p = stagePoint(img.getBoundingClientRect());
+  const f = img.cloneNode();
+  f.className = 'fly';
+  Object.assign(f.style, { left: p.x + 'px', top: p.y + 'px', width: p.w + 'px', height: p.h + 'px', objectFit: 'contain' });
+  $('stage').appendChild(f);
+  const pt = stagePoint($('prTop').getBoundingClientRect());
+  const tx = pt.x + pt.w / 2 - (p.x + p.w / 2), ty = pt.y - (p.y + p.h / 2);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    f.style.transform = `translate(${tx}px, ${ty}px) scale(.25) rotate(20deg)`;
+    f.style.opacity = '0';
+  }));
+  setTimeout(() => f.remove(), 650);
+}
+
+/* ===================== REGISTER UI ===================== */
+function updateUI() {
+  const tot = total();
+  const change = S.phase === 'done' ? S.paid - tot : 0;
+  const selecting = S.phase === 'select';
+
+  let l1 = 'WELCOME!', l1r = '', l2label = 'SUBTOTAL', l2 = yen(tot);
+  if (selecting && S.last) { l1 = S.last.name.toUpperCase(); l1r = yen(S.last.price); }
+  if (S.phase === 'pay') { l1 = 'TOTAL'; l1r = yen(tot); l2label = 'CASH'; l2 = yen(S.input || 0); }
+  if (S.phase === 'done') { l1 = 'CASH'; l1r = yen(S.paid); l2label = 'CHANGE'; l2 = yen(change); }
+  if (S.err) { l1 = 'NOT ENOUGH'; l1r = yen(tot); }
+  if (l1.length > 22) l1 = l1.slice(0, 21) + '…';
+  $('v1').textContent = l1; $('v1').classList.toggle('long', l1.length > 13);
+  $('v1r').textContent = l1r; $('v2label').textContent = l2label; $('v2').textContent = l2;
+  const v = $('vfd'); v.classList.remove('err'); if (S.err) { void v.offsetWidth; v.classList.add('err'); }
+
+  // conversation + hint
+  const C = (t) => ['cash', 'CASHIER', t], U = (t) => ['cust', 'CUSTOMER', t];
+  let talk, hint, pill = 'TAP', focus = '';
+  if (selecting && S.step === 0) { talk = [C('What would you like?'), U("I'd like ..., please.")]; }
+  else if (selecting && S.step === 1) { talk = [C('And for dessert?'), U("I'd like ..., please.")]; }
+  else if (selecting && S.step === 2) { talk = [C('And to drink?'), U("I'd like ..., please.")]; }
+  else if (selecting) { talk = [U('How much is it?')]; }
+  else if (S.phase === 'pay') { talk = [C(tot + ' yen, please.'), U('Here you are.')]; }
+  else { talk = [C(change > 0 ? 'Your change is ' + change + ' yen.' : "That's perfect!"), U('Thank you!')]; }
+  if (selecting && S.step < 3) { pill = 'TAP'; focus = 'menu'; hint = S.tab === 'set' ? 'a set the customer asked for' : 'the ' + ({ main: 'main dish', dessert: 'dessert', drink: 'drink' })[CATS[S.step]] + ' the customer asked for'; }
+  else if (selecting) { pill = 'PRESS'; focus = 'total'; hint = 'the blue TOTAL key'; }
+  else if (S.phase === 'pay') {
+    if (S.err) { pill = 'OOPS'; hint = 'Not enough money! Ask for more.'; }
+    else if (S.input) { pill = 'PRESS'; focus = 'cash'; hint = 'the green CASH key'; }
+    else { pill = 'TYPE'; focus = 'keypad'; hint = 'the money (numbers or ¥1,000)'; }
+  } else if (S.drawer && S.given < change) { pill = 'CLICK'; focus = 'coins'; const nd = nextDen(); hint = 'the ' + (nd >= 1000 ? '¥' + nd.toLocaleString('en-US') + ' bill' : '¥' + nd + ' coin') + ' (biggest first!)'; }
+  else if (S.drawer) { pill = 'CLOSE'; focus = 'close'; hint = change ? 'Right! Push the drawer shut' : 'No change! Push the drawer shut'; }
+  else { pill = 'TEAR'; focus = 'paper'; hint = 'the receipt: pull it up and off!'; }
+  const PILL = { TAP: '#2f6fdb', PRESS: '#2f6fdb', TYPE: '#8a3fc7', CLICK: '#d98a00', CLOSE: '#17894d', TEAR: '#d93a3f', OOPS: '#d93a3f' };
+  $('hintPill').textContent = S.msg ? 'OOPS' : pill;
+  $('hintPill').style.background = PILL[S.msg ? 'OOPS' : pill];
+  const stg = $('stage');
+  stg.className = ''; if (focus && !$('say').classList.contains('on')) stg.classList.add('focus-' + focus);
+  const key = JSON.stringify(talk);
+  if ($('talk').dataset.k !== key) {
+    $('talk').dataset.k = key;
+    $('talk').innerHTML = talk.map(([cls, who, t]) => `<div class="say ${cls}"><span class="who">${who}</span><span class="bubble">${esc(t)}</span></div>`).join('');
+  }
+  $('hint').textContent = S.msg || hint;
+
+  // glowing next key
+  $('kTotal').classList.toggle('glow', selecting && S.step >= 3);
+  $('kCash').classList.toggle('glow', S.phase === 'pay' && !!S.input && !S.err);
+
+  // drawer
+  const live = S.drawer && S.phase === 'done' && S.given < change;
+  const ndv = live ? nextDen() : 0;
+  DEN.forEach((d) => { $('comp' + d.v).classList.toggle('live', live); $('comp' + d.v).classList.toggle('target', live && d.v === ndv); });
+  const ready = S.drawer && S.given >= change;
+  $('drawerLbl').textContent = !S.drawer ? 'CASH DRAWER' : (change > 0 && S.given < change ? 'CHANGE GIVEN  ' + yen(S.given) : 'PUSH TO CLOSE');
+  document.querySelector('.dfront').classList.toggle('ready', ready);
+
+  // tear prompt
+  $('tearTag').classList.toggle('on', (S.phase === 'done' && !S.drawer) || (S.phase === 'select' && S.voids >= MAXV));
+  $('kVoid').classList.toggle('locked', !(S.phase === 'select' && S.cart.length) || S.voids >= MAXV);
+  const paper = $('paper');
+  if (paper) paper.classList.toggle('wiggle', S.phase === 'done' && !dragging);
+}
+
+function buildDrawer() {
+  DEN.forEach((d) => {
+    const c = document.createElement('button');
+    c.className = 'comp'; c.id = 'comp' + d.v; c.type = 'button';
+    c.setAttribute('aria-label', 'Give ' + yen(d.v));
+    c.innerHTML = d.kind === 'bill' ? `<div class="note ${d.cls}">${d.label}</div>` : `<div class="coin ${d.cls}">${d.label}</div>`;
+    c.onclick = () => giveMoney(d, c);
+    $(d.kind === 'bill' ? 'trayBills' : 'trayCoins').appendChild(c);
+  });
+}
+
+/* ===================== RECEIPT ===================== */
+const printQueue = [];
+let printing = false;
+
+function newPaper() {
+  const clip = $('paperClip');
+  clip.innerHTML = '';
+  const p = document.createElement('div');
+  p.className = 'paper'; p.id = 'paper';
+  p.innerHTML = '<div class="zig"></div><div class="paper-body" id="paperBody"></div>';
+  clip.appendChild(p);
+  attachTear(p);
+}
+function printHeader() {
+  S.printed = true;
+  const now = new Date(), pad = (n) => String(n).padStart(2, '0');
+  const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  queueLines([
+    ['shop', $('signName').textContent.trim() || S.r.name, ''],
+    ['meta', date, 'No. ' + String(S.orderNo).padStart(4, '0')],
+    ['rule', '', '']
+  ]);
+}
+function queueLines(lines, uid) {
+  lines.forEach((l) => printQueue.push(l.concat([uid || ''])));
+  if (!printing) runPrinter();
+}
+function runPrinter() {
+  if (!printQueue.length) { printing = false; return; }
+  printing = true;
+  const [cls, left, right, uid] = printQueue.shift();
+  const body = $('paperBody');
+  if (body) {
+    const d = document.createElement('div');
+    d.className = 'pline ' + cls;
+    if (uid) d.dataset.uid = uid;
+    d.innerHTML = `<span>${esc(left)}</span><span>${esc(right)}</span>`;
+    body.appendChild(d);
+    sPrintTick(); setTimeout(sPrintTick, 45);
+  }
+  setTimeout(runPrinter, 110);
+}
+// VOID: the item's lines roll back into the printer, so receipts can't be made longer by spamming
+function retract(uid) {
+  for (let i = printQueue.length - 1; i >= 0; i--) if (printQueue[i][3] === uid) printQueue.splice(i, 1);
+  const body = $('paperBody');
+  if (body) body.querySelectorAll('[data-uid="' + uid + '"]').forEach((el) => {
+    el.style.animation = 'retract .3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  });
+  sPrintTick(); setTimeout(sPrintTick, 70); setTimeout(sPrintTick, 140);
+}
+
+/* ---- tear off by dragging ---- */
+let dragging = false;
+function attachTear(p) {
+  let sx = 0, sy = 0, id = null, lastStretch = 0;
+  p.addEventListener('pointerdown', (e) => {
+    if (!$('paperBody').children.length) return;
+    dragging = true; id = e.pointerId; sx = e.clientX; sy = e.clientY;
+    p.setPointerCapture(id);
+    p.classList.remove('snap', 'wiggle'); p.classList.add('grab');
+    $('paperClip').classList.add('free');
+    actx();
+  });
+  p.addEventListener('pointermove', (e) => {
+    if (!dragging || e.pointerId !== id) return;
+    const dx = (e.clientX - sx) / scale, dy = (e.clientY - sy) / scale;
+    const dist = Math.hypot(dx, dy);
+    const rot = Math.max(-18, Math.min(18, dx * 0.12));
+    const lift = Math.min(0, dy) * 0.12;
+    p.style.transform = `translate(${dx * 0.08}px, ${lift}px) rotate(${rot}deg) scaleY(${1 + Math.min(dist, 140) * 0.0004})`;
+    if (Date.now() - lastStretch > 90 && dist > 20) { sStretch(); lastStretch = Date.now(); }
+    if (dist > 130) {
+      dragging = false; try { p.releasePointerCapture(id); } catch (err) {}
+      if (S.phase === 'done' && S.given < owed()) {
+        p.classList.remove('grab'); p.classList.add('snap'); p.style.transform = '';
+        setTimeout(() => $('paperClip').classList.remove('free'), 320);
+        sError(); flashHint('Give the change first! Click coins.');
+        return;
+      }
+      tearOff(p, dx, dy, rot);
+    }
+  });
+  const end = () => {
+    if (!dragging) return;
+    dragging = false;
+    p.classList.remove('grab'); p.classList.add('snap');
+    p.style.transform = '';
+    setTimeout(() => $('paperClip').classList.remove('free'), 320);
+    updateUI();
+  };
+  p.addEventListener('pointerup', end);
+  p.addEventListener('pointercancel', end);
+}
+
+function tearOff(p, dx, dy, rot) {
+  sRip();
+  const r = stagePoint(p.getBoundingClientRect());
+  const piece = p.cloneNode(true);
+  piece.removeAttribute('id');
+  piece.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+  piece.className = 'paper flypaper';
+  const pr = stagePoint($('paperClip').getBoundingClientRect());
+  const h = p.offsetHeight;
+  Object.assign(piece.style, { left: (pr.x + (pr.w - 228) / 2) + 'px', top: (pr.y + pr.h - h) + 'px', width: '228px', transform: `rotate(${rot}deg)`, transition: 'none' });
+  $('stage').appendChild(piece);
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len, uy = dy / len;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    piece.style.transition = 'transform .8s cubic-bezier(.2,.7,.4,1), opacity .45s ease-in .45s';
+    piece.style.transform = `translate(${ux * 200}px, ${uy * 200 - 60}px) rotate(${rot * 2 + (ux >= 0 ? 14 : -14)}deg)`;
+    piece.style.opacity = '0';
+  }));
+  setTimeout(() => piece.remove(), 1000);
+
+  // the order on that receipt is finished (or cancelled)
+  const hadOrder = S.printed;
+  printQueue.length = 0;
+  $('paperClip').classList.remove('free');
+  newPaper();
+  if (S.drawer) { sThunk(); }
+  if (hadOrder) S.orderNo++;
+  const wasDone = S.phase === 'done';
+  closeSay();
+  resetOrder(false, wasDone ? 99999 : 1000);
+  if (wasDone) {
+    clearTimeout(greetT);
+    later(() => say([{ who: 'cust', text: 'Thank you!' }, { who: 'cash', text: "You're welcome! Have a nice day." }], () => { clearTimeout(greetT); greetT = setTimeout(greet, 500); }), 700);
+  }
+}
+
+/* ===================== MENU MODE (customer menu) ===================== */
+const MENU_DECO = { horizon: ['🌊', '⚓', '🐟'], kirbycafe: ['⭐', '💖', '🍰'], pokemon: ['⚡', '🔥', '💧'], Rilakkuma: ['🐻', '🍯', '🌸'] };
+const SEC_ICON = { set: '🎁', main: '🍽️', dessert: '🍰', drink: '🥤' };
+const SEC_NAME = { set: 'Sets', main: 'Main Dishes', dessert: 'Desserts', drink: 'Drinks' };
+function openMenuMode() {
+  sClick();
+  drawMenuPaper();
+  $('menuModal').classList.add('on');
+  $('menuPaper').scrollTop = 0;
+}
+function drawMenuPaper() {
+  const r = S.r, d = MENU_DECO[r.key] || ['⭐', '🍽️', '✨'];
+  const p = $('menuPaper');
+  p.style.setProperty('--p', r.theme.primary); p.style.setProperty('--s', r.theme.secondary); p.style.setProperty('--bg', r.theme.productsPanel || '#fff7e3');
+  let h = `<header class="mp-head"><span class="mp-d l">${d[0]}</span>${r.logoPath ? `<img class="mp-logo" src="${r.logoPath}" alt="">` : ''}<div class="mp-ttl"><h1>${esc(r.name)}</h1>${r.description ? `<p>${esc(r.description)}</p>` : ''}</div><span class="mp-d r">${d[1]}</span></header>`;
+  h += `<div class="mp-say">Say: <b>“I’d like ___, please.”</b></div>`;
+  ['set'].concat(CATS).forEach((c) => {
+    const list = S.products[c] || [];
+    if (!list.length) return;
+    h += `<section class="mp-sec"><h2 class="mp-rib"><span>${SEC_ICON[c]}</span>${SEC_NAME[c]}<span>${d[2]}</span></h2><div class="mp-grid">`;
+    list.forEach((it, i) => {
+      const pics = it.items ? `<div class="mp-sets">${it.items.filter(Boolean).map((x) => `<img src="${x.image}" alt="">`).join('')}</div>` : `<div class="mp-pic"><img src="${it.image}" alt=""></div>`;
+      const nl = it.name.length > 18 ? ' sm' : '';
+      h += `<div class="mp-item t${i % 3}">${pics}<div class="mp-name${nl}">${esc(it.name)}</div><div class="mp-price">${yen(it.price)}</div></div>`;
+    });
+    h += `</div></section>`;
+  });
+  h += `<footer class="mp-foot">${d[0]} ${d[2]} ${d[1]} Thank you! ${d[1]} ${d[2]} ${d[0]}</footer>`;
+  p.innerHTML = h;
+}
+function printMenu() { sClick(); try { window.print(); } catch (e) {} }
+function openQR() { sClick(); $('qrModal').classList.add('on'); }
+function closeModal(id) { $(id).classList.remove('on'); }
+
+/* ===================== CREATE NEW SET ===================== */
+let setSel = {}, setStep = 'main';
+function openSetModal() {
+  setSel = { main: null, dessert: null, drink: null }; setStep = 'main';
+  drawSetModal(); $('setModal').classList.add('on');
+}
+function drawSetModal() {
+  const order = ['main', 'dessert', 'drink', 'name'];
+  $('setSteps').innerHTML = order.map((s) => {
+    const done = order.indexOf(s) < order.indexOf(setStep);
+    const now = s === setStep;
+    const label = s === 'name' ? 'Name' : CAT_LABEL[s];
+    return `<div class="tab ${done ? 'done' : ''} ${now ? 'now' : ''}">${done ? '✓ ' : ''}${label}</div>`;
+  }).join('');
+  const body = $('setBody');
+  if (setStep !== 'name') {
+    $('setTitle').textContent = { main: 'Choose a main dish', dessert: 'Choose a dessert', drink: 'Choose a drink' }[setStep];
+    body.innerHTML = '<div class="mgrid pick" id="setGrid"></div>';
+    (S.products[setStep] || []).forEach((it) => {
+      const c = makeCard(it, true);
+      c.onclick = () => { sBeep(); setSel[setStep] = it; setStep = order[order.indexOf(setStep) + 1]; drawSetModal(); };
+      $('setGrid').appendChild(c);
+    });
+    return;
+  }
+  const sumP = setSel.main.price + setSel.dessert.price + setSel.drink.price;
+  const price = Math.floor(sumP * 0.9);
+  $('setTitle').textContent = 'Name your set';
+  body.innerHTML = `
+    <div class="namerow">
+      <div class="preview">${[setSel.main, setSel.dessert, setSel.drink].map((x) => `<img src="${x.image}" alt="">`).join('')}</div>
+      <div class="setprice"><s>${yen(sumP)}</s> → <b>${yen(price)}</b> (10% off)</div>
+      <input id="setName" maxlength="30" placeholder="Set name" autocomplete="off">
+      <button class="bigbtn" id="setCreate" disabled>Add set to the menu</button>
+    </div>`;
+  const inp = $('setName'), btn = $('setCreate');
+  inp.oninput = () => { btn.disabled = !inp.value.trim(); };
+  inp.onkeydown = (e) => { if (e.key === 'Enter' && inp.value.trim()) btn.click(); };
+  btn.onclick = () => {
+    S.products.set.push({ id: 'set' + Date.now(), name: inp.value.trim(), price, items: [setSel.main, setSel.dessert, setSel.drink] });
+    sBeep(); closeModal('setModal');
+    S.tab = 'set'; renderMenu(); updateUI();
+  };
+  setTimeout(() => inp.focus(), 50);
+}
+
+/* ===================== SPEAKING PROMPTS ===================== */
+const PROMPT = { main: 'What would you like?', dessert: 'And for dessert?', drink: 'And to drink?' };
+let sayQ = [], sayThen = null, sayLine = null;
+try { S.speak = localStorage.getItem('crSpeak') !== '0'; } catch (e) { S.speak = true; }
+const AV = {
+  cash: '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#cfe9f5"/><circle cx="50" cy="42" r="19" fill="#ffd9b0"/><path d="M30 38c0-14 9-22 20-22s20 8 20 22c-7-6-13-8-20-8s-13 2-20 8z" fill="#5a3a1c"/><circle cx="43" cy="44" r="2.4" fill="#2b2a27"/><circle cx="57" cy="44" r="2.4" fill="#2b2a27"/><path d="M43 52q7 6 14 0" fill="none" stroke="#2b2a27" stroke-width="2.4" stroke-linecap="round"/><path d="M22 100c2-22 14-32 28-32s26 10 28 32z" fill="#fff"/><path d="M40 70l10 12 10-12z" fill="#d93a3f"/><rect x="30" y="8" width="40" height="16" rx="8" fill="#fff"/><circle cx="38" cy="12" r="9" fill="#fff"/><circle cx="62" cy="12" r="9" fill="#fff"/><circle cx="50" cy="8" r="10" fill="#fff"/></svg>',
+  cust: '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#ffe9a8"/><circle cx="50" cy="42" r="19" fill="#ffd9b0"/><path d="M30 42c-2-16 8-26 20-26s22 10 20 26c-3-8-9-12-20-12s-17 4-20 12z" fill="#2b2a27"/><circle cx="43" cy="44" r="2.4" fill="#2b2a27"/><circle cx="57" cy="44" r="2.4" fill="#2b2a27"/><path d="M43 52q7 6 14 0" fill="none" stroke="#2b2a27" stroke-width="2.4" stroke-linecap="round"/><path d="M20 100c2-22 14-32 30-32s28 10 30 32z" fill="#2f6fdb"/></svg>'
+};
+function say(lines, then) {
+  if (!S.speak || !lines.length) { if (then) then(); return; }
+  sayQ = lines.slice(); sayThen = then || null; showSay();
+}
+function showSay() {
+  const o = $('say');
+  if (!sayQ.length) {
+    o.classList.remove('on'); sayLine = null;
+    try { speechSynthesis.cancel(); } catch (e) {}
+    const f = sayThen; sayThen = null; updateUI(); if (f) f();
+    return;
+  }
+  sayLine = sayQ.shift();
+  const cust = sayLine.who === 'cust';
+  $('sayWrap').className = 'saywrap ' + (cust ? 'cust' : 'cash');
+  $('sayAvatar').innerHTML = AV[sayLine.who];
+  $('sayWho').textContent = cust ? 'CUSTOMER' : 'CASHIER';
+  const t = $('sayText'), n = sayLine.text.length;
+  t.innerHTML = esc(sayLine.text).replace(/___/g, '<span class="blank"></span>');
+  t.style.fontSize = (n < 22 ? 104 : n < 34 ? 88 : 72) + 'px';
+  $('saySub').textContent = sayLine.text.indexOf('___') >= 0 ? 'Say it with your food in the blank!' : 'Say it out loud!';
+  $('sayListen').style.display = ('speechSynthesis' in window) ? '' : 'none';
+  const first = !o.classList.contains('on');
+  o.classList.add('on');
+  $('sayWrap').animate([{ transform: 'scale(.9)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 220, easing: 'ease-out' });
+  if (first) { tone(880, 0.1, 'sine', 0.08); tone(1320, 0.16, 'sine', 0.08, 0.09); } else sClick();
+  updateUI();
+  $('sayNext').focus();
+}
+function sayNext() { showSay(); }
+function sayListen() {
+  try {
+    if (!sayLine) return;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(sayLine.text.replace(/___/g, ' ... '));
+    u.lang = 'en-US'; u.rate = 0.85; speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function closeSay() { sayQ = []; sayThen = null; sayLine = null; $('say').classList.remove('on'); try { speechSynthesis.cancel(); } catch (e) {} }
+function greet() {
+  if (!$('app').classList.contains('on')) return;
+  if (S.phase !== 'select' || S.cart.length || S.said.main) return;
+  S.said.main = true;
+  say([{ who: 'cash', text: PROMPT.main }, { who: 'cust', text: "I'd like ___, please." }]);
+}
+function drawSpeakBtn() {
+  const on = S.speak, b = $('speakBtn');
+  b.classList.toggle('off', !on);
+  b.setAttribute('aria-pressed', String(on));
+  b.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H11l-5 4v-4H4z"/>' + (on ? '' : '<path d="M3 3l18 18"/>') + '</svg>' + (on ? 'Say it' : 'Say it: off');
+}
+function toggleSpeak() {
+  S.speak = !S.speak;
+  try { localStorage.setItem('crSpeak', S.speak ? '1' : '0'); } catch (e) {}
+  drawSpeakBtn(); sClick();
+  if (!S.speak) { const f = sayThen; closeSay(); updateUI(); if (f) f(); }
+}
+document.addEventListener('keydown', (e) => {
+  if (!$('say').classList.contains('on')) return;
+  if ((e.key === 'Enter' || e.key === ' ') && !(document.activeElement && document.activeElement.tagName === 'BUTTON')) { e.preventDefault(); sayNext(); }
+});
+
+/* ===================== START ===================== */
+drawSpeakBtn();
+buildDrawer();
+drawSoundBtn();
+newPaper();
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadRestaurants();
+  renderPicker();
+});
+</script>
+</body>
+</html>

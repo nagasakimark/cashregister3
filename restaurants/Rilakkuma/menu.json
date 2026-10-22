@@ -21,27 +21,27 @@
       {
         "name": "Beef Curry",
         "price": 391,
-        "image": "products/main/beef curry.jpg"
+        "image": "products/main/beef curry.webp"
       },
       {
         "name": "Beef Stew Rice",
         "price": 414,
-        "image": "products/main/beef stew rice.jpg"
+        "image": "products/main/beef stew rice.webp"
       },
       {
         "name": "Beef Udon",
         "price": 465,
-        "image": "products/main/beef udon.jpg"
+        "image": "products/main/beef udon.webp"
       },
       {
         "name": "Carbonara Pasta",
         "price": 461,
-        "image": "products/main/carbonara pasta.jpg"
+        "image": "products/main/carbonara pasta.webp"
       },
       {
         "name": "Chicken Stew Rice",
         "price": 502,
-        "image": "products/main/chicken stew rice.jpg"
+        "image": "products/main/chicken stew rice.webp"
       },
       {
         "name": "Curry",
@@ -51,12 +51,12 @@
       {
         "name": "Duck Noodles",
         "price": 403,
-        "image": "products/main/duck noodles.jpg"
+        "image": "products/main/duck noodles.webp"
       },
       {
         "name": "Omelet Rice",
         "price": 501,
-        "image": "products/main/omelet rice.jpg"
+        "image": "products/main/omelet rice.webp"
       },
       {
         "name": "Pork Cutlet Curry",
@@ -66,27 +66,27 @@
       {
         "name": "Salmon Rice",
         "price": 445,
-        "image": "products/main/salmon rice.jpg"
+        "image": "products/main/salmon rice.webp"
       },
       {
         "name": "Soba Noodles",
         "price": 383,
-        "image": "products/main/soba noodles.jpg"
+        "image": "products/main/soba noodles.webp"
       },
       {
         "name": "Sushi",
         "price": 425,
-        "image": "products/main/sushi.jpg"
+        "image": "products/main/sushi.webp"
       },
       {
         "name": "Burger and Fries",
         "price": 416,
-        "image": "products/dessert/burger and fries.jpg"
+        "image": "products/dessert/burger and fries.webp"
       },
       {
         "name": "Chicken Cordon Bleu",
         "price": 433,
-        "image": "products/dessert/chicken cordon bleu.jpg"
+        "image": "products/dessert/chicken cordon bleu.webp"
       }
     ],
     "dessert": [
@@ -108,22 +108,22 @@
       {
         "name": "Dango",
         "price": 257,
-        "image": "products/dessert/dango.jpg"
+        "image": "products/dessert/dango.webp"
       },
       {
         "name": "Dorayaki",
         "price": 206,
-        "image": "products/dessert/dorayaki.jpg"
+        "image": "products/dessert/dorayaki.webp"
       },
       {
         "name": "Green Tea Cake",
         "price": 234,
-        "image": "products/dessert/green tea cake.jpg"
+        "image": "products/dessert/green tea cake.webp"
       },
       {
         "name": "Green Tea Parfait",
         "price": 268,
-        "image": "products/dessert/green tea parfait.jpg"
+        "image": "products/dessert/green tea parfait.webp"
       },
       {
         "name": "Ice Cream Sandwich",
@@ -138,60 +138,61 @@
       {
         "name": "Mochi",
         "price": 264,
-        "image": "products/dessert/mochi.jpg"
+        "image": "products/dessert/mochi.webp"
       },
       {
         "name": "Parfait",
         "price": 224,
-        "image": "products/dessert/parfait.jpg"
+        "image": "products/dessert/parfait.webp"
       },
       {
         "name": "Red Bean Paste",
         "price": 242,
-        "image": "products/dessert/red bean paste.jpg"
+        "image": "products/dessert/red bean paste.webp"
       },
       {
         "name": "Zenzai",
         "price": 243,
-        "image": "products/dessert/zenzai.jpg"
+        "image": "products/dessert/zenzai.webp"
       }
     ],
     "drink": [
       {
         "name": "Black Coffee",
         "price": 173,
-        "image": "products/drink/black coffee.jpg"
+        "image": "products/drink/black coffee.webp"
       },
       {
         "name": "Cola",
         "price": 165,
-        "image": "products/drink/cola.jpg"
+        "image": "products/drink/cola.webp"
       },
       {
         "name": "Green Tea",
         "price": 170,
-        "image": "products/drink/green tea.jpg"
+        "image": "products/drink/green tea.webp"
       },
       {
         "name": "Latte",
         "price": 170,
-        "image": "products/drink/latte.jpg"
+        "image": "products/drink/latte.webp"
       },
       {
         "name": "Milk Tea",
         "price": 120,
-        "image": "products/drink/milk tea.jpg"
+        "image": "products/drink/milk tea.webp"
       },
       {
         "name": "Orange Juice",
         "price": 158,
-        "image": "products/drink/orange juice.jpg"
+        "image": "products/drink/orange juice.webp"
       },
       {
         "name": "Soda",
         "price": 112,
-        "image": "products/drink/soda.jpg"
+        "image": "products/drink/soda.webp"
       }
     ]
-  }
+  },
+  "logo": "logo.webp"
 }

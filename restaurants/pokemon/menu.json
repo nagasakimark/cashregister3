@@ -16,32 +16,32 @@
       {
         "name": "Bolognese",
         "price": 473,
-        "image": "products/main/bolognese.png"
+        "image": "products/main/bolognese.webp"
       },
       {
         "name": "Carbonara",
         "price": 475,
-        "image": "products/main/carbonara.jpg"
+        "image": "products/main/carbonara.webp"
       },
       {
         "name": "Chicken Burger",
         "price": 415,
-        "image": "products/main/chicken burger.jpg"
+        "image": "products/main/chicken burger.webp"
       },
       {
         "name": "Curry",
         "price": 472,
-        "image": "products/main/curry.jpg"
+        "image": "products/main/curry.webp"
       },
       {
         "name": "French Fries",
         "price": 431,
-        "image": "products/main/french fries.png"
+        "image": "products/main/french fries.webp"
       },
       {
         "name": "Hamburg Doria",
         "price": 488,
-        "image": "products/main/Hamburg Doria.jpg"
+        "image": "products/main/Hamburg Doria.webp"
       },
       {
         "name": "Hamburger",
@@ -56,12 +56,12 @@
       {
         "name": "Pasta",
         "price": 443,
-        "image": "products/main/pasta.jpg"
+        "image": "products/main/pasta.webp"
       },
       {
         "name": "Pizza",
         "price": 478,
-        "image": "products/main/pizza.avif"
+        "image": "products/main/pizza.webp"
       },
       {
         "name": "Salad",
@@ -71,7 +71,7 @@
       {
         "name": "Sandwich",
         "price": 428,
-        "image": "products/main/sandwich.jpg"
+        "image": "products/main/sandwich.webp"
       },
       {
         "name": "Sushi",
@@ -83,95 +83,96 @@
       {
         "name": "Cheesecake",
         "price": 237,
-        "image": "products/dessert/cheese ake.jpg"
+        "image": "products/dessert/cheese ake.webp"
       },
       {
         "name": "Chocolate Banana Crepe",
         "price": 247,
-        "image": "products/dessert/chocolate banana crepe.jpg"
+        "image": "products/dessert/chocolate banana crepe.webp"
       },
       {
         "name": "Chocolate Parfait",
         "price": 275,
-        "image": "products/dessert/chocolate parfait.jpg"
+        "image": "products/dessert/chocolate parfait.webp"
       },
       {
         "name": "Cream Puff",
         "price": 214,
-        "image": "products/dessert/cream puff.png"
+        "image": "products/dessert/cream puff.webp"
       },
       {
         "name": "Doughnut",
         "price": 216,
-        "image": "products/dessert/doughnut.jpg"
+        "image": "products/dessert/doughnut.webp"
       },
       {
         "name": "Fruit Pudding",
         "price": 242,
-        "image": "products/dessert/Fruit pudding.jpg"
+        "image": "products/dessert/Fruit pudding.webp"
       },
       {
         "name": "Ice Cream",
         "price": 205,
-        "image": "products/dessert/ice cream.jpg"
+        "image": "products/dessert/ice cream.webp"
       },
       {
         "name": "Pancake",
         "price": 223,
-        "image": "products/dessert/pancake.jpg"
+        "image": "products/dessert/pancake.webp"
       },
       {
         "name": "Parfait",
         "price": 252,
-        "image": "products/dessert/parfait.jpg"
+        "image": "products/dessert/parfait.webp"
       }
     ],
     "drink": [
       {
         "name": "Black Coffee",
         "price": 144,
-        "image": "products/drink/black coffee.jpg"
+        "image": "products/drink/black coffee.webp"
       },
       {
         "name": "Coffee Latte",
         "price": 120,
-        "image": "products/drink/coffee latte.jpg"
+        "image": "products/drink/coffee latte.webp"
       },
       {
         "name": "Coffee",
         "price": 163,
-        "image": "products/drink/coffee.png"
+        "image": "products/drink/coffee.webp"
       },
       {
         "name": "Fruit Tea",
         "price": 142,
-        "image": "products/drink/fruit tea.jpg"
+        "image": "products/drink/fruit tea.webp"
       },
       {
         "name": "Iced Tea",
         "price": 104,
-        "image": "products/drink/iced tea.jpg"
+        "image": "products/drink/iced tea.webp"
       },
       {
         "name": "Milk Tea",
         "price": 111,
-        "image": "products/drink/milk tea.jpg"
+        "image": "products/drink/milk tea.webp"
       },
       {
         "name": "Milk",
         "price": 117,
-        "image": "products/drink/milk.jpg"
+        "image": "products/drink/milk.webp"
       },
       {
         "name": "Smoothie",
         "price": 142,
-        "image": "products/drink/smoothie.jpg"
+        "image": "products/drink/smoothie.webp"
       },
       {
         "name": "Soda",
         "price": 145,
-        "image": "products/drink/soda.jpg"
+        "image": "products/drink/soda.webp"
       }
     ]
-  }
+  },
+  "logo": "logo.webp"
 }

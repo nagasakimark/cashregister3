@@ -17,151 +17,151 @@
         "id": "main1",
         "name": "rice",
         "price": 130,
-        "image": "products/main/rice.png"
+        "image": "products/main/rice.webp"
       },
       {
         "id": "main2",
         "name": "rice ball",
         "price": 120,
-        "image": "products/main/riceball.png"
+        "image": "products/main/riceball.webp"
       },
       {
         "id": "main3",
         "name": "curry and rice",
         "price": 490,
-        "image": "products/main/curryrice.png"
+        "image": "products/main/curryrice.webp"
       },
       {
         "id": "main4",
         "name": "grilled eel",
         "price": 590,
-        "image": "products/main/grilledeel.png"
+        "image": "products/main/grilledeel.webp"
       },
       {
         "id": "main5",
         "name": "grilled fish",
         "price": 400,
-        "image": "products/main/grilledfish.png"
+        "image": "products/main/grilledfish.webp"
       },
       {
         "id": "main6",
         "name": "bread",
         "price": 160,
-        "image": "products/main/bread.png"
+        "image": "products/main/bread.webp"
       },
       {
         "id": "main7",
         "name": "sandwich",
         "price": 180,
-        "image": "products/main/sandwich.png"
+        "image": "products/main/sandwich.webp"
       },
       {
         "id": "main9",
         "name": "pizza",
         "price": 500,
-        "image": "products/main/pizza.png"
+        "image": "products/main/pizza.webp"
       },
       {
         "id": "main10",
         "name": "hamburger",
         "price": 340,
-        "image": "products/main/hamburger.png"
+        "image": "products/main/hamburger.webp"
       },
       {
         "id": "main11",
         "name": "hot dog",
         "price": 290,
-        "image": "products/main/hotdog.png"
+        "image": "products/main/hotdog.webp"
       },
       {
         "id": "main12",
         "name": "French fries",
         "price": 260,
-        "image": "products/main/frenchfries.png"
+        "image": "products/main/frenchfries.webp"
       },
       {
         "id": "main13",
         "name": "fried chicken",
         "price": 250,
-        "image": "products/main/friedchicken.png"
+        "image": "products/main/friedchicken.webp"
       },
       {
         "id": "main14",
         "name": "sausage",
         "price": 190,
-        "image": "products/main/sausage.png"
+        "image": "products/main/sausage.webp"
       },
       {
         "id": "main15",
         "name": "steak",
         "price": 590,
-        "image": "products/main/steak.png"
+        "image": "products/main/steak.webp"
       },
       {
         "id": "main16",
         "name": "omelet",
         "price": 410,
-        "image": "products/main/omelet.png"
+        "image": "products/main/omelet.webp"
       },
       {
         "id": "main17",
         "name": "spaghetti",
         "price": 560,
-        "image": "products/main/spaghetti.png"
+        "image": "products/main/spaghetti.webp"
       },
       {
         "id": "main18",
         "name": "pie",
         "price": 330,
-        "image": "products/main/pie.png"
+        "image": "products/main/pie.webp"
       },
       {
         "id": "main19",
         "name": "salad",
         "price": 240,
-        "image": "products/main/salad.png"
+        "image": "products/main/salad.webp"
       },
       {
         "id": "main20",
         "name": "fried noodles",
         "price": 350,
-        "image": "products/main/friednoodles.png"
+        "image": "products/main/friednoodles.webp"
       },
       {
         "id": "main21",
         "name": "ramen",
         "price": 480,
-        "image": "products/main/ramen.png"
+        "image": "products/main/ramen.webp"
       },
       {
         "id": "main22",
         "name": "soba",
         "price": 420,
-        "image": "products/main/soba.png"
+        "image": "products/main/soba.webp"
       },
       {
         "id": "main23",
         "name": "beef bowl",
         "price": 380,
-        "image": "products/main/beefbowl.png"
+        "image": "products/main/beefbowl.webp"
       },
       {
         "id": "main24",
         "name": "sushi",
         "price": 400,
-        "image": "products/main/sushi.png"
+        "image": "products/main/sushi.webp"
       },
       {
         "id": "main25",
         "name": "tempura",
         "price": 590,
-        "image": "products/main/tempura.png"
+        "image": "products/main/tempura.webp"
       },
       {
         "id": "main26",
         "name": "soup",
         "price": 270,
-        "image": "products/main/soup.png"
+        "image": "products/main/soup.webp"
       }
     ],
     "dessert": [
@@ -169,67 +169,67 @@
         "id": "dessert1",
         "name": "cake",
         "price": 250,
-        "image": "products/dessert/cake.png"
+        "image": "products/dessert/cake.webp"
       },
       {
         "id": "dessert2",
         "name": "donut",
         "price": 100,
-        "image": "products/dessert/donut.png"
+        "image": "products/dessert/donut.webp"
       },
       {
         "id": "dessert3",
         "name": "parfait",
         "price": 250,
-        "image": "products/dessert/parfait.png"
+        "image": "products/dessert/parfait.webp"
       },
       {
         "id": "dessert4",
         "name": "pudding",
         "price": 210,
-        "image": "products/dessert/pudding.png"
+        "image": "products/dessert/pudding.webp"
       },
       {
         "id": "dessert5",
         "name": "ice cream",
         "price": 220,
-        "image": "products/dessert/icecream.png"
+        "image": "products/dessert/icecream.webp"
       },
       {
         "id": "dessert11",
         "name": "pancake",
         "price": 250,
-        "image": "products/dessert/pancake.png"
+        "image": "products/dessert/pancake.webp"
       },
       {
         "id": "dessert6",
         "name": "shaved ice",
         "price": 170,
-        "image": "products/dessert/shavedice.png"
+        "image": "products/dessert/shavedice.webp"
       },
       {
         "id": "dessert7",
         "name": "chocolate",
         "price": 110,
-        "image": "products/dessert/chocolate.png"
+        "image": "products/dessert/chocolate.webp"
       },
       {
         "id": "dessert8",
         "name": "cream puff",
         "price": 120,
-        "image": "products/dessert/creampuff.png"
+        "image": "products/dessert/creampuff.webp"
       },
       {
         "id": "dessert9",
         "name": "popcorn",
         "price": 190,
-        "image": "products/dessert/popcorn.png"
+        "image": "products/dessert/popcorn.webp"
       },
       {
         "id": "dessert10",
         "name": "potato chips",
         "price": 120,
-        "image": "products/dessert/potatochips.png"
+        "image": "products/dessert/potatochips.webp"
       }
     ],
     "drink": [
@@ -237,50 +237,51 @@
         "id": "drink1",
         "name": "coffee",
         "price": 150,
-        "image": "products/drink/coffee.png"
+        "image": "products/drink/coffee.webp"
       },
       {
         "id": "drink2",
         "name": "tea",
         "price": 140,
-        "image": "products/drink/tea.png"
+        "image": "products/drink/tea.webp"
       },
       {
         "id": "drink3",
         "name": "green tea",
         "price": 150,
-        "image": "products/drink/greentea.png"
+        "image": "products/drink/greentea.webp"
       },
       {
         "id": "drink4",
         "name": "juice",
         "price": 159,
-        "image": "products/drink/juice.png"
+        "image": "products/drink/juice.webp"
       },
       {
         "id": "drink5",
         "name": "soda",
         "price": 130,
-        "image": "products/drink/soda.png"
+        "image": "products/drink/soda.webp"
       },
       {
         "id": "drink6",
         "name": "milk",
         "price": 110,
-        "image": "products/drink/milk.png"
+        "image": "products/drink/milk.webp"
       },
       {
         "id": "drink7",
         "name": "water",
         "price": 0,
-        "image": "products/drink/water.png"
+        "image": "products/drink/water.webp"
       },
       {
         "id": "drink8",
         "name": "mineral water",
         "price": 100,
-        "image": "products/drink/mineralwater.png"
+        "image": "products/drink/mineralwater.webp"
       }
     ]
-  }
+  },
+  "logo": "logo.webp"
 }

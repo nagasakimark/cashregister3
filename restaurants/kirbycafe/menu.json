@@ -17,7 +17,7 @@
         "id": "main1",
         "name": "Kirby Burger",
         "price": 503,
-        "image": "products/main/burger.jpg"
+        "image": "products/main/burger.webp"
       },
       {
         "id": "main2",
@@ -53,7 +53,7 @@
         "id": "main7",
         "name": "Hot Dog",
         "price": 499,
-        "image": "products/main/hot dog.jpg"
+        "image": "products/main/hot dog.webp"
       },
       {
         "id": "main8",
@@ -71,13 +71,13 @@
         "id": "main10",
         "name": "Soup",
         "price": 475,
-        "image": "products/main/soup.png"
+        "image": "products/main/soup.webp"
       },
       {
         "id": "main11",
         "name": "Salad",
         "price": 432,
-        "image": "products/main/salad.jpg"
+        "image": "products/main/salad.webp"
       },
       {
         "id": "main12",
@@ -127,7 +127,7 @@
         "id": "dessert4",
         "name": "Strawberry Tart",
         "price": 221,
-        "image": "products/dessert/strawberry tart.jpg"
+        "image": "products/dessert/strawberry tart.webp"
       },
       {
         "id": "dessert5",
@@ -145,7 +145,7 @@
         "id": "dessert7",
         "name": "Candy Parfait",
         "price": 222,
-        "image": "products/dessert/candy parfait.jpg"
+        "image": "products/dessert/candy parfait.webp"
       },
       {
         "id": "dessert8",
@@ -163,7 +163,7 @@
         "id": "dessert10",
         "name": "Frying Pan Parfait",
         "price": 254,
-        "image": "products/dessert/frying pan parfait.jpg"
+        "image": "products/dessert/frying pan parfait.webp"
       },
       {
         "id": "dessert11",
@@ -198,5 +198,6 @@
         "image": "products/drink/apple cinammon juice.webp"
       }
     ]
-  }
+  },
+  "logo": "logo.webp"
 }

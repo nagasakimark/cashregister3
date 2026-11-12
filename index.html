@@ -1280,23 +1280,22 @@ function attachTear(p) {
 
 function tearOff(p, dx, dy, rot) {
   sRip();
-  const r = stagePoint(p.getBoundingClientRect());
   const piece = p.cloneNode(true);
   piece.removeAttribute('id');
   piece.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
   piece.className = 'paper flypaper';
   const pr = stagePoint($('paperClip').getBoundingClientRect());
   const h = p.offsetHeight;
-  Object.assign(piece.style, { left: (pr.x + (pr.w - 228) / 2) + 'px', top: (pr.y + pr.h - h) + 'px', width: '228px', transform: `rotate(${rot}deg)`, transition: 'none' });
+  const cur = p.style.transform || `rotate(${rot}deg)`;   // exactly what the dragged paper shows now
+  Object.assign(piece.style, { left: (pr.x + (pr.w - 228) / 2) + 'px', top: (pr.y + pr.h - h) + 'px', width: '228px', transform: cur, transition: 'none', opacity: '1' });
   $('stage').appendChild(piece);
+  piece.getBoundingClientRect();                           // commit start state in the same frame
   const len = Math.hypot(dx, dy) || 1;
   const ux = dx / len, uy = dy / len;
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    piece.style.transition = 'transform .8s cubic-bezier(.2,.7,.4,1), opacity .45s ease-in .45s';
-    piece.style.transform = `translate(${ux * 200}px, ${uy * 200 - 60}px) rotate(${rot * 2 + (ux >= 0 ? 14 : -14)}deg)`;
-    piece.style.opacity = '0';
-  }));
-  setTimeout(() => piece.remove(), 1000);
+  piece.style.transition = 'transform .7s cubic-bezier(.2,.7,.4,1), opacity .35s ease-in .35s';
+  piece.style.transform = `translate(${ux * 200}px, ${uy * 200 - 60}px) rotate(${rot * 2 + (ux >= 0 ? 14 : -14)}deg)`;
+  piece.style.opacity = '0';
+  setTimeout(() => piece.remove(), 800);
 
   // the order on that receipt is finished (or cancelled)
   const hadOrder = S.printed;

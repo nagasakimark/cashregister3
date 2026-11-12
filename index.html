@@ -125,30 +125,27 @@ img { -webkit-user-drag: none; user-select: none; }
 #signLogo { width: 46px; height: 46px; border-radius: 14px; object-fit: cover; flex-shrink: 0; }
 #signName {
   font-family: 'NH', sans-serif; font-size: 36px; line-height: 1.3; padding-bottom: .1em; color: #3b2a12; outline: none;
-  white-space: nowrap; max-width: 420px;
+  white-space: nowrap; max-width: 420px; min-width: 150px; text-align: center; cursor: text;
 }
+#signName:empty::before { content: attr(data-ph); opacity: .35; }
 
 /* speech */
-#talk { left: calc(596px + var(--dx)); top: calc(92px + var(--dy)); width: 940px; height: 64px; display: flex; justify-content: space-between; align-items: center; gap: 14px; pointer-events: none; }
-.tb { display: flex; align-items: center; gap: 12px; min-width: 0; pointer-events: auto; }
-.tav { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; background: #fff; border: 4px solid #fff; box-shadow: 0 4px 0 rgba(0,0,0,.25); flex-shrink: 0; }
+#talk { left: calc(1148px + var(--dx)); top: 64px; width: 410px; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.tb { display: flex; align-items: flex-end; gap: 10px; max-width: 100%; }
+.tb.cash { align-self: flex-start; }
+.tb.cust { align-self: flex-end; }
+.tav { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #fff; border: 4px solid #fff; box-shadow: 0 4px 0 rgba(0,0,0,.25); flex-shrink: 0; }
 .tbub {
-  appearance: none; border: 0; cursor: pointer; position: relative; display: flex; align-items: center; gap: 10px;
-  background: #fff; color: #2b2a27; border-radius: 20px; padding: 6px 16px 10px;
-  font-family: 'NH', sans-serif; font-size: 27px; line-height: 1.3; white-space: nowrap;
+  position: relative; background: #fff; color: #2b2a27; border-radius: 18px; padding: 5px 14px 9px; min-width: 0;
+  font-family: 'NH', sans-serif; font-size: 23px; line-height: 1.25; white-space: normal; overflow-wrap: anywhere;
   box-shadow: 0 4px 0 rgba(0,0,0,.2); animation: pop .3s ease both;
 }
-.tbub.long { font-size: 22px; }
-.tbub::after { content: ''; position: absolute; top: 50%; margin-top: -9px; border: 9px solid transparent; }
+.tbub::after { content: ''; position: absolute; bottom: 16px; border: 9px solid transparent; }
 .tb.cash .tbub::after { left: -16px; border-right-color: #fff; border-left: 0; }
 .tb.cust .tbub::after { right: -16px; border-left-color: #fff7d1; border-right: 0; }
-.tb.cust .tbub { background: #fff7d1; animation-delay: .9s; }
-#talk.cfirst .tb.cust .tbub { animation-delay: 0s; }
-#talk.cfirst .tb.cash .tbub { animation-delay: .9s; }
-.tbub:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.2); }
-.hear { opacity: .35; display: grid; place-items: center; }
-.tbub:hover .hear { opacity: .8; }
-.tbub .blank { display: inline-block; min-width: 84px; height: .75em; border-bottom: 5px dashed #c9b88a; margin: 0 .1em; }
+.tb.cust .tbub { background: #fff7d1; }
+.tb:nth-child(2) .tbub { animation-delay: .9s; }
+.blank { display: inline-block; min-width: 84px; height: .75em; border-bottom: 5px dashed #c9b88a; margin: 0 .1em; }
 
 /* ================= MENU STAND ================= */
 #menuStand { left: 30px; top: 100px; width: calc(530px + var(--dx)); height: calc(540px + var(--dy)); }
@@ -244,9 +241,9 @@ img { -webkit-user-drag: none; user-select: none; }
 #hintPlate {
   left: 38px; top: 82px; width: 424px; height: 26px; border-radius: 8px;
   background: #fffdf4; border: 2px solid #cfc2a2; color: #3b3326;
-  font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 8px;
+  font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 8px; font-family: 'Hiragino Maru Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
 }
-#hintPlate .pill { flex-shrink: 0; background: #2f6fdb; color: #fff; border-radius: 999px; font-size: 11px; letter-spacing: .1em; padding: 0 10px; line-height: 14px; }
+#hintPlate .pill { flex-shrink: 0; background: #2f6fdb; color: #fff; border-radius: 999px; font-size: 11px; letter-spacing: .1em; padding: 0 10px; line-height: 15px; font-size: 12px; letter-spacing: .05em; }
 #hint { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .deck {
   left: 12px; top: 114px; width: 476px; height: 198px; border-radius: 18px;
@@ -277,7 +274,7 @@ img { -webkit-user-drag: none; user-select: none; }
 .k-bill  { --cap: #cfdcf3; --edge: #8ea6cf; --txt: #1e3a6e; font-size: 16px; }
 .glow { animation: glow 1.1s ease-in-out infinite; }
 @keyframes glow { 0%,100% { box-shadow: 0 5px 0 var(--edge), 0 2px 0 0 rgba(255,194,26,0); } 50% { box-shadow: 0 5px 0 var(--edge), 0 2px 0 6px rgba(255,194,26,.95); } }
-#bell { left: 1164px; top: 538px; width: 56px; height: 46px; padding: 0; border: 0; background: none; cursor: pointer; z-index: 5; transform-origin: 50% 90%; filter: drop-shadow(0 3px 0 rgba(0,0,0,.25)); }
+#bell { left: 1162px; top: 538px; width: 56px; height: 46px; padding: 0; border: 0; background: none; cursor: pointer; z-index: 5; transform-origin: 50% 90%; filter: drop-shadow(0 3px 0 rgba(0,0,0,.25)); }
 #bell:active { transform: scale(.94); }
 
 /* base + drawer */
@@ -336,11 +333,11 @@ img { -webkit-user-drag: none; user-select: none; }
 .dfront .lock::after { content: ''; position: absolute; left: 4px; top: 2px; width: 4px; height: 8px; background: #6b6458; border-radius: 2px; }
 
 /* ================= RECEIPT PRINTER ================= */
-#prTop { left: 1222px; top: 440px; width: 296px; height: 40px; border-radius: 34px 34px 0 0; background: linear-gradient(#f7efdc, #e6dac0); z-index: 1;
+#prTop { left: 1222px; top: 504px; width: 296px; height: 40px; border-radius: 34px 34px 0 0; background: linear-gradient(#f7efdc, #e6dac0); z-index: 1;
   box-shadow: inset 0 4px 0 #fffdf6, 0 0 0 3px rgba(40,25,10,.6); }
 #prTop .slot { position: absolute; left: 22px; right: 22px; bottom: 6px; height: 10px; border-radius: 5px; background: #2b2118; box-shadow: inset 0 3px 3px rgba(0,0,0,.6); }
 #paperClip {
-  left: 1250px; top: 170px; width: 240px; height: 310px; z-index: 2; overflow: hidden; pointer-events: none;
+  left: 1250px; top: 252px; width: 240px; height: 292px; z-index: 2; overflow: hidden; pointer-events: none;
   display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
   -webkit-mask-image: linear-gradient(transparent 0, #000 50px); mask-image: linear-gradient(transparent 0, #000 50px);
 }
@@ -369,7 +366,7 @@ img { -webkit-user-drag: none; user-select: none; }
 .pline.blank { line-height: 10px; }
 .pline.barcode { height: 26px; margin: 6px 14px 0; background: repeating-linear-gradient(90deg, #2b2a27 0 2px, transparent 2px 4px, #2b2a27 4px 5px, transparent 5px 8px, #2b2a27 8px 11px, transparent 11px 13px, #2b2a27 13px 14px, transparent 14px 17px); }
 #prFront {
-  left: 1222px; top: 476px; width: 296px; height: 124px; border-radius: 6px 6px 18px 18px; background: linear-gradient(var(--acc) 0 22px, #f4ebd7 22px, #e3d6b9); z-index: 3;
+  left: 1222px; top: 540px; width: 296px; height: 124px; border-radius: 6px 6px 18px 18px; background: linear-gradient(var(--acc) 0 22px, #f4ebd7 22px, #e3d6b9); z-index: 3;
   box-shadow: inset 0 -6px 0 #c9b98f, 0 0 0 3px rgba(40,25,10,.6), 0 12px 16px rgba(0,0,0,.3);
 }
 .cutter { position: absolute; left: 24px; right: 24px; top: -6px; z-index: 1; height: 14px; background: #a8aeb6;
@@ -384,12 +381,17 @@ img { -webkit-user-drag: none; user-select: none; }
 
 
 /* ================= KIDS MENU ================= */
-.menuwrap { width: min(1040px, 100%); max-height: 94vh; display: flex; flex-direction: column; gap: 10px; animation: pop .25s ease both; }
-.menubar { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
-.menubar .mb-title { margin-right: auto; font-family: 'NH', sans-serif; font-size: 30px; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.4); }
-.menubar .bigbtn { height: 48px; font-size: 18px; padding: 0 24px; background: #2f6fdb; box-shadow: 0 5px 0 #1f4e9e; }
+.menuwrap { --p: #ffcc00; --s: #cc0000; --bg: #fff7e3; width: min(1280px, 100%); max-height: 100%; display: flex; flex-direction: column; gap: 8px; animation: pop .25s ease both; }
+#menuModal { padding: 10px; }
+.menubar { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+#mbLogo { width: 44px; height: 44px; border-radius: 12px; object-fit: cover; background: #fff; border: 3px solid #fff; flex-shrink: 0; }
+.mb-tabs { display: flex; gap: 8px; margin-left: auto; }
+.mb-tab { appearance: none; border: 0; cursor: pointer; height: 44px; padding: 0 20px; border-radius: 14px; background: #fff; color: #5a4a2a; font-family: inherit; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 rgba(0,0,0,.22); display: flex; align-items: center; gap: 8px; }
+.mb-tab.on { background: var(--s); color: #fff; box-shadow: 0 4px 0 rgba(0,0,0,.35); }
+.mb-tab:active { transform: translateY(3px); }
+.menubar .mb-title { font-family: 'NH', sans-serif; font-size: 28px; line-height: 1.3; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.menubar .bigbtn { height: 44px; font-size: 17px; padding: 0 20px; background: #2f6fdb; box-shadow: 0 5px 0 #1f4e9e; }
 .mpaper {
-  --p: #ffcc00; --s: #cc0000; --bg: #fff7e3;
   flex: 1 1 auto; min-height: 0; overflow-y: auto; border-radius: 26px; padding: 22px 26px 26px; color: #2b2a27;
   border: 10px solid var(--s);
   background-color: var(--bg);
@@ -422,6 +424,19 @@ img { -webkit-user-drag: none; user-select: none; }
 .mp-price { background: var(--s); color: #fff; font-weight: 800; font-size: 22px; line-height: 1.2; padding: 3px 18px 5px; border-radius: 999px; box-shadow: 0 3px 0 rgba(0,0,0,.2); }
 .mp-foot { margin-top: 22px; text-align: center; font-family: 'NH', sans-serif; font-size: 26px; color: var(--s); }
 
+/* on screen: one category at a time, compact */
+.mpaper { border-width: 8px; border-radius: 20px; padding: 10px 12px 14px; }
+.mp-head, .mp-say, .mp-foot, .mp-rib { display: none; }
+.mp-sec { display: none; margin-top: 0; }
+.mp-sec.on { display: block; }
+.mp-grid { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 12px; }
+.mp-item { border-width: 3px; border-radius: 16px; padding: 6px 6px 9px; gap: 3px; box-shadow: 0 4px 0 rgba(0,0,0,.12); }
+.mp-item.t0, .mp-item.t2 { transform: none; }
+.mp-pic, .mp-sets { aspect-ratio: 4 / 3; border-radius: 10px; }
+.mp-pic img { width: 92%; height: 92%; }
+.mp-name { font-size: 18px; } .mp-name.sm { font-size: 15px; }
+.mp-price { font-size: 18px; padding: 2px 14px 4px; }
+
 @media print {
   @page { size: A4; margin: 7mm; }
   html, body { background: #fff !important; overflow: visible !important; height: auto !important; }
@@ -433,6 +448,9 @@ img { -webkit-user-drag: none; user-select: none; }
     -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .mpaper * { -webkit-print-color-adjust: exact; print-color-adjust: exact; animation: none !important; }
   .mp-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .mp-head { display: flex; } .mp-say { display: block; } .mp-foot { display: block; } .mp-rib { display: flex; } .mp-sec { display: block !important; }
+  .mp-pic, .mp-sets { aspect-ratio: 1; }
+  .mpaper { padding: 12px 14px; border-width: 6px; }
   .mp-item { box-shadow: none; padding: 6px 6px 8px; border-width: 3px; }
   .mp-item.t0, .mp-item.t2 { transform: none; }
   .mp-ttl h1 { font-size: 40px; } .mp-logo { width: 70px; height: 70px; } .mp-d { font-size: 38px; }
@@ -508,14 +526,13 @@ img { -webkit-user-drag: none; user-select: none; }
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 9h6M9 13h6"/></svg>Menu
       </button>
       <button class="wallbtn" onclick="openQR()">QR Code</button>
-      <button class="wallbtn" id="speakBtn" onclick="toggleSpeak()" aria-label="Read the lines aloud"></button>
       <button class="wallbtn icon" id="fsBtn" onclick="toggleFS()" aria-label="Full screen"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
       <button class="wallbtn icon" id="soundBtn" onclick="toggleSound()" aria-label="Turn sound off"></button>
     </div>
 
     <div id="sign" class="abs">
       <img id="signLogo" alt="" style="display: none">
-      <div id="signName" contenteditable="true" spellcheck="false">Restaurant</div>
+      <div id="signName" contenteditable="plaintext-only" spellcheck="false" data-ph="Name" aria-label="Restaurant name">Restaurant</div>
     </div>
 
     <div id="talk" class="abs"></div>
@@ -559,7 +576,7 @@ img { -webkit-user-drag: none; user-select: none; }
           <span class="ghost" aria-hidden="true">88888888</span>
         </div>
       </div>
-      <div id="hintPlate" class="abs"><span class="pill" id="hintPill">TAP</span><span id="hint">the main dish</span></div>
+      <div id="hintPlate" class="abs"><span class="pill" id="hintPill">えらぶ</span><span id="hint">メインを えらぼう</span></div>
       <div class="deck abs"></div>
       <div class="rled abs"><i style="background:#42e28a"></i><i style="background:#ffc21a"></i><i style="background:#ff6b5e"></i></div>
       <div class="grille abs"><i></i><i></i><i></i><i></i></div>
@@ -585,7 +602,7 @@ img { -webkit-user-drag: none; user-select: none; }
     </div>
 
     <!-- receipt printer -->
-    <div class="floorshadow abs" style="left: 1200px; top: 584px; width: 340px; height: 34px"></div>
+    <div class="floorshadow abs" style="left: 1200px; top: 648px; width: 340px; height: 34px"></div>
     <button id="bell" class="abs hit" onclick="ringBell()" aria-label="Ring the bell"><svg viewBox="0 0 64 52" width="56" height="46"><ellipse cx="32" cy="46" rx="28" ry="5" fill="#8a6a1c"/><path d="M8 44c0-18 10-30 24-30s24 12 24 30z" fill="#f0c44a"/><path d="M14 40c1-13 8-22 18-24-9 4-13 12-13 24z" fill="#fff3b8" opacity=".8"/><rect x="29" y="6" width="6" height="8" rx="3" fill="#b8901f"/><circle cx="32" cy="6" r="4" fill="#d9a92b"/></svg></button>
     <div id="prTop" class="abs hit"><div class="slot"></div></div>
     <div id="paperClip" class="abs"></div>
@@ -595,7 +612,7 @@ img { -webkit-user-drag: none; user-select: none; }
       <span class="led"></span>
       <div id="tearTag">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
-        Tear it off!
+        ひっぱって ちぎろう！
       </div>
     </div>
     </div><!-- /rg -->
@@ -607,7 +624,8 @@ img { -webkit-user-drag: none; user-select: none; }
 <div class="modal" id="menuModal" onclick="if (event.target === this) closeModal('menuModal')">
   <div class="menuwrap">
     <div class="menubar noprint">
-      <span class="mb-title">Menu</span>
+      <img id="mbLogo" alt="" style="display:none"><span class="mb-title" id="mbTitle">Menu</span>
+      <div class="mb-tabs" id="mbTabs"></div>
       <button class="bigbtn" onclick="printMenu()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:8px"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7z"/></svg>Print</button>
       <button class="xbtn" onclick="closeModal('menuModal')" aria-label="Close menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
@@ -659,7 +677,7 @@ async function loadRestaurants() {
 /* ===================== STATE ===================== */
 const S = {
   r: null, products: {}, cart: [], step: 0, phase: 'select', input: '', paid: 0, last: null,
-  err: false, drawer: false, tab: 'main', orderNo: 1, printed: false, sound: true, given: 0, msg: '', voids: 0, speak: false, dwait: false, bye: false, cust: 1, byeCust: 1
+  err: false, drawer: false, tab: 'main', orderNo: 1, printed: false, sound: true, given: 0, msg: '', voids: 0, dwait: false, bye: false, cust: 1, byeCust: 1
 };
 const MAXV = 2;            // voids allowed per order
 let uidN = 0, busyUntil = 0, drawerT = null, byeT = null;
@@ -807,7 +825,7 @@ function openRestaurant(key) {
 }
 
 function backToPicker() {
-  closeModal('menuModal'); closeModal('setModal'); clearTimeout(drawerT); clearTimeout(byeT); S.bye = false; stopSpeak();
+  closeModal('menuModal'); closeModal('setModal'); clearTimeout(drawerT); clearTimeout(byeT); S.bye = false;
   $('app').classList.remove('on');
   $('picker').style.display = 'flex';
   document.title = 'Restaurant';
@@ -818,8 +836,35 @@ function fitSign() {
   let fs = 36; el.style.fontSize = fs + 'px';
   while (el.scrollWidth > 420 && fs > 20) { fs -= 2; el.style.fontSize = fs + 'px'; }
 }
-$('signName').addEventListener('input', () => { document.title = $('signName').textContent; fitSign(); });
+const MAXNAME = 24;
+function syncShopName() {   // keep the receipt's shop line in step with the sign
+  const n = $('signName').textContent.trim() || S.r.name;
+  document.querySelectorAll('#paperBody .pline.shop > span:first-child').forEach((e) => { e.textContent = n; });
+  printQueue.forEach((q) => { if (q[0] === 'shop') q[1] = n; });
+}
+function clampName() {
+  const el = $('signName');
+  let t = el.textContent.replace(/[\r\n]+/g, ' ');
+  if (t.length > MAXNAME || t !== el.textContent) {
+    el.textContent = t.slice(0, MAXNAME);
+    const r = document.createRange(); r.selectNodeContents(el); r.collapse(false);
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  }
+}
+$('signName').addEventListener('input', () => { clampName(); if (!$('signName').textContent) $('signName').innerHTML = ''; document.title = $('signName').textContent || S.r.name; fitSign(); syncShopName(); });
 $('signName').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
+$('signName').addEventListener('paste', (e) => {
+  e.preventDefault();
+  const t = (e.clipboardData.getData('text') || '').replace(/\s+/g, ' ');
+  const sel = getSelection(), el = $('signName');
+  const room = MAXNAME - (el.textContent.length - (sel.toString().length));
+  if (room > 0) document.execCommand('insertText', false, t.slice(0, room));
+});
+$('signName').addEventListener('blur', () => {   // never leave the sign empty
+  const el = $('signName');
+  if (!el.textContent.trim()) { el.textContent = S.r.name; document.title = S.r.name; }
+  fitSign(); syncShopName();
+});
 
 /* ===================== ORDER FLOW ===================== */
 function resetOrder(fresh, greetDelay) {
@@ -857,7 +902,7 @@ function keyNum(k) {
   let v = S.input + k;
   if (v.length > 6) return;
   v = String(parseInt(v, 10) || 0);
-  if (parseInt(v, 10) > 1000) { v = '1000'; flashHint('The most is ¥1,000.', 1800); }
+  if (parseInt(v, 10) > 1000) { v = '1000'; flashHint('いちばん おおきいのは 1000えん だよ', 1800); }
   S.input = v === '0' ? '' : v;
   S.err = false; updateUI();
 }
@@ -871,7 +916,7 @@ function keyVoid() {
   sClick();
   if (S.phase !== 'select' || !S.cart.length) { nudgeHint(); return; }
   if (busy()) return;
-  if (S.voids >= MAXV) { sError(); flashHint('No more voids! Tear off the receipt.', 3200); return; }
+  if (S.voids >= MAXV) { sError(); flashHint('もう けせないよ！ レシートを ちぎろう', 3200); return; }
   busyUntil = Date.now() + 650;
   S.voids++;
   const it = S.cart.pop();
@@ -927,7 +972,7 @@ function flashHint(t, ms) {
 }
 function closeDrawer() {
   if (!S.drawer) return;
-  if (S.given < owed()) { sError(); flashHint('Give the change first! Click coins.'); return; }
+  if (S.given < owed()) { sError(); flashHint('さきに おつりを わたそう！ コインを タッチ'); return; }
   sThunk(); S.drawer = false; $('drawer').classList.remove('open'); updateUI();
 }
 const sClink = (v) => { const f = v >= 500 ? 3400 : v >= 100 ? 3000 : v >= 10 ? 2500 : 3700; tone(f, 0.22, 'sine', 0.1); tone(f * 1.5, 0.16, 'sine', 0.04, 0.02); noise(0.03, 5000, 0.05); };
@@ -937,7 +982,7 @@ function giveMoney(d, comp) {
   const nd = nextDen();
   if (d.v !== nd) {
     sError(); comp.classList.remove('nope'); void comp.offsetWidth; comp.classList.add('nope');
-    flashHint(d.v > nd ? "Too big! Use the biggest coin that fits." : "Start with a bigger coin!", 2600);
+    flashHint(d.v > nd ? 'おおきすぎるよ！ ちがう コインを えらぼう' : 'もっと おおきい コインから わたそう！', 2600);
     return;
   }
   S.given += d.v;
@@ -1002,7 +1047,7 @@ function renderMenu() {
   grid.scrollTop = 0;
   if (!selecting) {
     const title = S.phase === 'done' ? 'Paid!' : 'Order complete';
-    const sub = S.phase === 'select' ? 'Press TOTAL on the register' : S.phase === 'pay' ? 'Waiting for the money…' : 'Give the change and tear off the receipt';
+    const sub = S.phase === 'select' ? 'レジの「TOTAL」を おそう' : S.phase === 'pay' ? 'おかねを まっているよ…' : 'おつりを わたして レシートを ちぎろう';
     grid.innerHTML = `<div class="done-panel"><div class="tick"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="big">${title}</div><div class="small">${sub}</div></div>`;
     return;
   }
@@ -1077,36 +1122,33 @@ function updateUI() {
   else if (S.phase === 'pay') { talk = [C(tot + ' yen, please.'), U('Here you are.')]; }
   else { talk = [C(change > 0 ? 'Your change is ' + change + ' yen.' : "That's perfect! No change."), U('Thank you!')]; }
   if (byeNow) talk = [U('Thank you!'), C("You're welcome! Have a nice day.")];
-  if (byeNow) { pill = 'WAVE'; hint = 'Bye bye! Next customer…'; }
-  else if (selecting && S.step < 3) { pill = 'TAP'; focus = 'menu'; hint = S.tab === 'set' ? 'a set the customer asked for' : 'the ' + ({ main: 'main dish', dessert: 'dessert', drink: 'drink' })[CATS[S.step]] + ' the customer asked for'; }
-  else if (selecting) { pill = 'PRESS'; focus = 'total'; hint = 'the blue TOTAL key'; }
+  if (byeNow) { pill = 'バイバイ'; hint = 'つぎの おきゃくさんが くるよ！'; }
+  else if (selecting && S.step < 3) { pill = 'えらぶ'; focus = 'menu'; hint = S.tab === 'set' ? 'おきゃくさんが たのんだ セットを えらぼう' : 'おきゃくさんの ' + ({ main: 'メイン', dessert: 'デザート', drink: 'のみもの' })[CATS[S.step]] + 'を えらぼう'; }
+  else if (selecting) { pill = 'おす'; focus = 'total'; hint = 'あおい「TOTAL」ボタンを おそう'; }
   else if (S.phase === 'pay') {
-    if (S.err) { pill = 'OOPS'; hint = 'Not enough money! Ask for more.'; }
-    else if (S.input) { pill = 'PRESS'; focus = 'cash'; hint = 'the green CASH key'; }
-    else { pill = 'TYPE'; focus = 'keypad'; hint = 'the money (numbers or ¥1,000)'; }
-  } else if (S.dwait) { pill = 'LISTEN'; hint = 'to the change… the drawer is opening!'; }
-  else if (S.drawer && S.given < change) { pill = 'CLICK'; focus = 'coins'; const nd = nextDen(); hint = 'the ' + (nd >= 1000 ? '¥' + nd.toLocaleString('en-US') + ' bill' : '¥' + nd + ' coin') + ' (biggest first!)'; }
-  else if (S.drawer) { pill = 'CLOSE'; focus = 'close'; hint = change ? 'Right! Push the drawer shut' : 'No change! Push the drawer shut'; }
-  else { pill = 'TEAR'; focus = 'paper'; hint = 'the receipt: pull it up and off!'; }
-  const PILL = { WAVE: '#17894d', LISTEN: '#8a3fc7', TAP: '#2f6fdb', PRESS: '#2f6fdb', TYPE: '#8a3fc7', CLICK: '#d98a00', CLOSE: '#17894d', TEAR: '#d93a3f', OOPS: '#d93a3f' };
-  $('hintPill').textContent = S.msg ? 'OOPS' : pill;
-  $('hintPill').style.background = PILL[S.msg ? 'OOPS' : pill];
+    if (S.err) { pill = 'あれ？'; hint = 'おかねが たりないよ！ もっと もらおう'; }
+    else if (S.input) { pill = 'おす'; focus = 'cash'; hint = 'みどりの「CASH」ボタンを おそう'; }
+    else { pill = 'いれる'; focus = 'keypad'; hint = 'もらった おかねを いれよう'; }
+  } else if (S.dwait) { pill = 'きいて'; hint = 'おつりを きこう… ひきだしが ひらくよ！'; }
+  else if (S.drawer && S.given < change) { pill = 'タッチ'; focus = 'coins'; const nd = nextDen(); hint = 'いちばん おおきい ' + nd.toLocaleString('en-US') + 'えんの ' + (nd >= 1000 ? 'おさつ' : 'コイン') + 'を タッチ'; }
+  else if (S.drawer) { pill = 'しめる'; focus = 'close'; hint = change ? 'できた！ ひきだしを おして しめよう' : 'おつりは なし！ ひきだしを しめよう'; }
+  else { pill = 'ちぎる'; focus = 'paper'; hint = 'レシートを うえに ひっぱって ちぎろう！'; }
+  const PILL = { 'バイバイ': '#17894d', 'きいて': '#8a3fc7', 'えらぶ': '#2f6fdb', 'おす': '#2f6fdb', 'いれる': '#8a3fc7', 'タッチ': '#d98a00', 'しめる': '#17894d', 'ちぎる': '#d93a3f', 'あれ？': '#d93a3f' };
+  $('hintPill').textContent = S.msg ? 'あれ？' : pill;
+  $('hintPill').style.background = PILL[S.msg ? 'あれ？' : pill];
   const stg = $('stage');
   stg.className = ''; if (focus) stg.classList.add('focus-' + focus);
   const key = JSON.stringify([talk, S.cust, S.byeCust, byeNow]);
   if ($('talk').dataset.k !== key) {
     $('talk').dataset.k = key;
     const cav = `assets/av/c${byeNow ? S.byeCust : S.cust}.webp`;
-    const hear = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>';
     const bub = ([who, t]) => {
       const text = esc(t).replace(/___/g, '<span class="blank"></span>');
       const av = who === 'cash' ? `<img class="tav" src="${$('cashAv').src}" alt="">` : `<img class="tav" src="${cav}" alt="">`;
-      const b = `<button class="tbub${t.length > 26 ? ' long' : ''}" onclick="speakLine(this.dataset.t)" data-t="${esc(t)}" aria-label="Listen"><span class="tt">${text}</span><span class="hear">${hear}</span></button>`;
+      const b = `<div class="tbub"><span class="tt">${text}</span></div>`;
       return `<div class="tb ${who}">${who === 'cash' ? av + b : b + av}</div>`;
     };
-    $('talk').classList.toggle('cfirst', byeNow);
     $('talk').innerHTML = talk.map(bub).join('');
-    if (S.speak) { const c = talk.find((x) => x[0] === 'cash'); if (c) speakLine(c[1]); }
   }
   $('hint').textContent = S.msg || hint;
 
@@ -1119,7 +1161,7 @@ function updateUI() {
   const ndv = live ? nextDen() : 0;
   DEN.forEach((d) => { $('comp' + d.v).classList.toggle('live', live); $('comp' + d.v).classList.toggle('target', live && d.v === ndv); });
   const ready = S.drawer && S.given >= change;
-  $('drawerLbl').textContent = !S.drawer ? 'CASH DRAWER' : (change > 0 && S.given < change ? 'CHANGE GIVEN  ' + yen(S.given) : 'PUSH TO CLOSE');
+  $('drawerLbl').textContent = !S.drawer ? 'CASH DRAWER' : (change > 0 && S.given < change ? 'おつり  ' + yen(S.given) : 'おして しめる');
   document.querySelector('.dfront').classList.toggle('ready', ready);
 
   // tear prompt
@@ -1218,7 +1260,7 @@ function attachTear(p) {
       if (S.phase === 'done' && S.given < owed()) {
         p.classList.remove('grab'); p.classList.add('snap'); p.style.transform = '';
         setTimeout(() => $('paperClip').classList.remove('free'), 320);
-        sError(); flashHint('Give the change first! Click coins.');
+        sError(); flashHint('さきに おつりを わたそう！ コインを タッチ');
         return;
       }
       tearOff(p, dx, dy, rot);
@@ -1275,22 +1317,28 @@ function tearOff(p, dx, dy, rot) {
 const MENU_DECO = { horizon: ['🌊', '⚓', '🐟'], kirbycafe: ['⭐', '💖', '🍰'], pokemon: ['⚡', '🔥', '💧'], Rilakkuma: ['🐻', '🍯', '🌸'] };
 const SEC_ICON = { set: '🎁', main: '🍽️', dessert: '🍰', drink: '🥤' };
 const SEC_NAME = { set: 'Sets', main: 'Main Dishes', dessert: 'Desserts', drink: 'Drinks' };
+let mmCat = 'main';
 function openMenuMode() {
   sClick();
+  mmCat = 'main';
   drawMenuPaper();
   $('menuModal').classList.add('on');
-  $('menuPaper').scrollTop = 0;
 }
+function setMenuCat(c) { mmCat = c; sClick(); drawMenuPaper(); }
 function drawMenuPaper() {
   const r = S.r, d = MENU_DECO[r.key] || ['⭐', '🍽️', '✨'];
-  const p = $('menuPaper');
-  p.style.setProperty('--p', r.theme.primary); p.style.setProperty('--s', r.theme.secondary); p.style.setProperty('--bg', r.theme.productsPanel || '#fff7e3');
+  const m = $('menuModal'), p = $('menuPaper');
+  m.style.setProperty('--p', r.theme.primary); m.style.setProperty('--s', r.theme.secondary); m.style.setProperty('--bg', r.theme.productsPanel || '#fff7e3');
+  const cats = ['set'].concat(CATS).filter((c) => (S.products[c] || []).length);
+  if (!cats.includes(mmCat)) mmCat = cats[0] || 'main';
+  $('mbTitle').textContent = r.name;
+  const lg = $('mbLogo'); if (r.logoPath) { lg.src = r.logoPath; lg.style.display = ''; } else lg.style.display = 'none';
+  $('mbTabs').innerHTML = cats.map((c) => `<button class="mb-tab${c === mmCat ? ' on' : ''}" onclick="setMenuCat('${c}')"><span>${SEC_ICON[c]}</span>${SEC_NAME[c].replace(' Dishes', '')}</button>`).join('');
   let h = `<header class="mp-head"><span class="mp-d l">${d[0]}</span>${r.logoPath ? `<img class="mp-logo" src="${r.logoPath}" alt="">` : ''}<div class="mp-ttl"><h1>${esc(r.name)}</h1>${r.description ? `<p>${esc(r.description)}</p>` : ''}</div><span class="mp-d r">${d[1]}</span></header>`;
   h += `<div class="mp-say">Say: <b>“I’d like ___, please.”</b></div>`;
-  ['set'].concat(CATS).forEach((c) => {
+  cats.forEach((c) => {
     const list = S.products[c] || [];
-    if (!list.length) return;
-    h += `<section class="mp-sec"><h2 class="mp-rib"><span>${SEC_ICON[c]}</span>${SEC_NAME[c]}<span>${d[2]}</span></h2><div class="mp-grid">`;
+    h += `<section class="mp-sec${c === mmCat ? ' on' : ''}"><h2 class="mp-rib"><span>${SEC_ICON[c]}</span>${SEC_NAME[c]}<span>${d[2]}</span></h2><div class="mp-grid">`;
     list.forEach((it, i) => {
       const pics = it.items ? `<div class="mp-sets">${it.items.filter(Boolean).map((x) => `<img src="${x.image}" alt="">`).join('')}</div>` : `<div class="mp-pic"><img src="${it.image}" alt=""></div>`;
       const nl = it.name.length > 18 ? ' sm' : '';
@@ -1300,6 +1348,7 @@ function drawMenuPaper() {
   });
   h += `<footer class="mp-foot">${d[0]} ${d[2]} ${d[1]} Thank you! ${d[1]} ${d[2]} ${d[0]}</footer>`;
   p.innerHTML = h;
+  p.scrollTop = 0;
 }
 function printMenu() { sClick(); try { window.print(); } catch (e) {} }
 function openQR() { sClick(); $('qrModal').classList.add('on'); }
@@ -1351,36 +1400,12 @@ function drawSetModal() {
   setTimeout(() => inp.focus(), 50);
 }
 
-/* ===================== VOICE (optional read-aloud) ===================== */
-try { S.speak = localStorage.getItem('crVoice') === '1'; } catch (e) { S.speak = false; }
-function stopSpeak() { try { speechSynthesis.cancel(); } catch (e) {} }
-function speakLine(t) {
-  try {
-    if (!('speechSynthesis' in window)) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(String(t).replace(/___|\.\.\./g, ' ... '));
-    u.lang = 'en-US'; u.rate = 0.85; speechSynthesis.speak(u);
-  } catch (e) {}
-}
-function drawSpeakBtn() {
-  const on = S.speak, b = $('speakBtn');
-  b.classList.toggle('off', !on);
-  b.setAttribute('aria-pressed', String(on));
-  b.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/>' + (on ? '<path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/>' : '<path d="M17 9l5 6M22 9l-5 6"/>') + '</svg>' + (on ? 'Voice on' : 'Voice off');
-}
-function toggleSpeak() {
-  S.speak = !S.speak;
-  try { localStorage.setItem('crVoice', S.speak ? '1' : '0'); } catch (e) {}
-  drawSpeakBtn(); sClick();
-  if (S.speak) { const c = document.querySelector('#talk .tb.cash .tbub'); if (c) speakLine(c.dataset.t); } else stopSpeak();
-}
 function ringBell() {
   tone(2637, 0.9, 'sine', 0.12); tone(3951, 0.6, 'sine', 0.05, 0.01);
   const b = $('bell'); b.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-12deg)' }, { transform: 'rotate(10deg)' }, { transform: 'rotate(-5deg)' }, { transform: 'rotate(0)' }], { duration: 500 });
 }
 
 /* ===================== START ===================== */
-drawSpeakBtn();
 buildDrawer();
 drawSoundBtn();
 newPaper();

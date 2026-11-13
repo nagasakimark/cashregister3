@@ -462,6 +462,21 @@ img { -webkit-user-drag: none; user-select: none; }
 /* ================= MODALS ================= */
 .modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; background: rgba(30,20,10,.55); padding: 20px; }
 .modal.on { display: flex; }
+#confirmModal { z-index: 110; }
+.cf { background: #fffaf0; border-radius: 24px; border: 6px solid var(--acc, #d33); box-shadow: 0 14px 0 rgba(0,0,0,.25); padding: 14px 22px 18px; display: flex; flex-direction: column; align-items: center; gap: 6px; max-width: 92vw; max-height: 96vh; animation: cfpop .22s cubic-bezier(.3,1.6,.5,1); }
+@keyframes cfpop { from { transform: scale(.8); opacity: 0 } to { transform: none; opacity: 1 } }
+.cf .cfpics { display: flex; gap: 10px; justify-content: center; }
+.cf img { height: min(300px, 46vh); width: auto; max-width: 70vw; object-fit: contain; border-radius: 16px; }
+.cf .cfpics img { height: min(220px, 36vh); }
+.cf .cfen { font-family: 'NH', sans-serif; font-size: 34px; line-height: 1.2; color: #2b1d10; text-align: center; }
+.cf .cfja { font-size: 30px; font-weight: 800; color: #b42318; line-height: 1.2; text-align: center; }
+.cf .cfpr { font-weight: 800; font-size: 26px; color: #2b1d10; }
+.cf .cfbtns { display: flex; gap: 22px; margin-top: 8px; }
+.cfbtn { font-family: 'NH', sans-serif; font-size: 28px; font-weight: 800; color: #fff; border: 0; border-radius: 16px; padding: 10px 34px; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,.28); display: flex; flex-direction: column; align-items: center; line-height: 1.15; }
+.cfbtn small { font-size: 15px; font-weight: 700; opacity: .95; }
+.cfbtn:active { transform: translateY(5px); box-shadow: 0 1px 0 rgba(0,0,0,.28); }
+.cfbtn.ok { background: #1fa64a; } .cfbtn.no { background: #d92d2d; }
+
 .sheet { background: var(--panel); border: 8px solid var(--accent); border-radius: 24px; max-width: 960px; width: 100%; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.35); animation: pop .25s ease both; }
 .sheet-head { display: flex; align-items: center; gap: 14px; padding: 18px 22px 10px; }
 .sheet-head h2 { margin: 0; flex-grow: 1; font-family: 'NH', sans-serif; font-weight: 500; font-size: 40px; line-height: 1.25; }
@@ -643,6 +658,10 @@ img { -webkit-user-drag: none; user-select: none; }
   </div>
 </div>
 
+<div class="modal" id="confirmModal" onclick="if (event.target === this) cfNo()">
+  <div class="cf" id="cfBox"></div>
+</div>
+
 <div class="modal" id="qrModal" onclick="closeModal('qrModal')">
   <div class="sheet"><img src="qrcode.png" alt="QR code"></div>
 </div>
@@ -651,6 +670,8 @@ img { -webkit-user-drag: none; user-select: none; }
 /* ===================== DATA ===================== */
 const restaurantKeys = ['horizon', 'kirbycafe', 'pokemon', 'Rilakkuma'];
 const restaurants = {};
+const KANA = {"beef burger": "ビーフバーガー", "beef curry": "ビーフカレー", "beef stew rice": "ビーフシチューライス", "beef udon": "ビーフウドン", "carbonara pasta": "カルボナーラパスタ", "chicken stew rice": "チキンシチューライス", "curry": "カレー", "duck noodles": "ダックヌードル", "omelet rice": "オムライス", "pork cutlet curry": "カツカレー", "salmon rice": "サーモンライス", "soba noodles": "ソバヌードル", "sushi": "スシ", "burger and fries": "バーガーとフライドポテト", "chicken cordon bleu": "チキンコルドンブルー", "cheese pancakes": "チーズパンケーキ", "chocolate banana parfait": "チョコバナナパフェ", "crepe": "クレープ", "dango": "ダンゴ", "dorayaki": "ドラヤキ", "green tea cake": "グリーンティーケーキ", "green tea parfait": "グリーンティーパフェ", "ice cream sandwich": "アイスクリームサンド", "lemon cake": "レモンケーキ", "mochi": "モチ", "parfait": "パフェ", "red bean paste": "アンコ", "zenzai": "ゼンザイ", "black coffee": "ブラックコーヒー", "cola": "コーラ", "green tea": "グリーンティー", "latte": "ラテ", "milk tea": "ミルクティー", "orange juice": "オレンジジュース", "soda": "ソーダ", "rice": "ライス", "rice ball": "オニギリ", "curry and rice": "カレーライス", "grilled eel": "グリルドイール", "grilled fish": "グリルドフィッシュ", "bread": "ブレッド", "sandwich": "サンドイッチ", "pizza": "ピザ", "hamburger": "ハンバーガー", "hot dog": "ホットドッグ", "french fries": "フライドポテト", "fried chicken": "フライドチキン", "sausage": "ソーセージ", "steak": "ステーキ", "omelet": "オムレツ", "spaghetti": "スパゲッティ", "pie": "パイ", "salad": "サラダ", "fried noodles": "ヤキソバ", "ramen": "ラーメン", "soba": "ソバ", "beef bowl": "ギュウドン", "tempura": "テンプラ", "soup": "スープ", "cake": "ケーキ", "donut": "ドーナツ", "pudding": "プリン", "ice cream": "アイスクリーム", "pancake": "パンケーキ", "shaved ice": "カキゴオリ", "chocolate": "チョコレート", "cream puff": "シュークリーム", "popcorn": "ポップコーン", "potato chips": "ポテトチップス", "coffee": "コーヒー", "tea": "ティー", "juice": "ジュース", "milk": "ミルク", "water": "ウォーター", "mineral water": "ミネラルウォーター", "kirby burger": "カービィバーガー", "four cheese pizza": "フォーチーズピザ", "seafood pizza": "シーフードピザ", "tomato pizza": "トマトピザ", "stew": "シチュー", "cheese fries": "チーズフライ", "skewers": "スキュア", "star bread": "スターブレッド", "car cake": "カーケーキ", "takoyaki cake": "タコヤキケーキ", "strawberry tart": "ストロベリータルト", "tiramisu": "ティラミス", "candy parfait": "キャンディパフェ", "chocolate parfait": "チョコレートパフェ", "peach parfait": "ピーチパフェ", "frying pan parfait": "フライパンパフェ", "sorbet": "ソルベ", "marshmallow coffee": "マシュマロコーヒー", "apple cinnamon juice": "アップルシナモンジュース", "bolognese": "ボロネーゼ", "carbonara": "カルボナーラ", "chicken burger": "チキンバーガー", "hamburg doria": "ハンバーグドリア", "mapo tofu": "マーボードウフ", "pasta": "パスタ", "pikachu pho": "ピカチュウフォー", "cheesecake": "チーズケーキ", "chocolate banana crepe": "チョコバナナクレープ", "doughnut": "ドーナツ", "fruit pudding": "フルーツプリン", "coffee latte": "コーヒーラテ", "fruit tea": "フルーツティー", "iced tea": "アイスティー", "smoothie": "スムージー"};
+const kanaOf = (it) => it.kana || KANA[String(it.name).toLowerCase()] || it.name;
 const CATS = ['main', 'dessert', 'drink'];
 const CAT_LABEL = { set: 'Sets', main: 'Main', dessert: 'Dessert', drink: 'Drink' };
 const DEN = [
@@ -878,6 +899,29 @@ function resetOrder(fresh, greetDelay) {
   renderMenu(); updateUI();
 }
 
+
+/* ---- confirm-before-ordering preview ---- */
+let cfItem = null, cfImg = null;
+function askPick(it, srcImg) {
+  if (busy()) return;
+  if (S.phase !== 'select' || S.step >= 3) { sError(); return; }
+  sClick();
+  cfItem = it; cfImg = srcImg;
+  const pics = it.items
+    ? `<div class="cfpics">${it.items.filter(Boolean).map((x) => `<img src="${x.image}" alt="">`).join('')}</div>`
+    : `<img src="${it.image}" alt="">`;
+  const ja = it.items ? '' : `<div class="cfja">${esc(kanaOf(it))}</div>`;
+  $('cfBox').innerHTML = `${pics}<div class="cfen">${esc(it.name)}</div>${ja}<div class="cfpr">${yen(it.price)}</div>
+    <div class="cfbtns"><button class="cfbtn no" onclick="cfNo()">No<small>いいえ</small></button><button class="cfbtn ok" onclick="cfYes()">Yes<small>はい</small></button></div>`;
+  $('confirmModal').classList.add('on');
+}
+function cfNo() { sClick(); $('confirmModal').classList.remove('on'); cfItem = null; }
+function cfYes() {
+  const it = cfItem, img = cfImg; $('confirmModal').classList.remove('on'); cfItem = null;
+  if (!it) return;
+  const live = img && img.isConnected ? img : null;
+  pick(it, live);
+}
 function pick(item, sourceImg) {
   if (busy()) return;
   if (S.phase !== 'select' || S.step >= 3) { sError(); return; }
@@ -1072,7 +1116,7 @@ function makeCard(it, clickable) {
     : `<img class="pic" src="${it.image}" alt="">`;
   const nl = it.name.length > 22 ? 'l2' : it.name.length > 14 ? 'l1' : '';
   b.innerHTML = `${pics}<span class="nm ${nl}">${esc(it.name)}</span><span class="pr">${yen(it.price)}</span>`;
-  if (clickable) b.onclick = () => pick(it, b.querySelector('img'));
+  if (clickable) b.onclick = () => askPick(it, b.querySelector('img'));
   return b;
 }
 

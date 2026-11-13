@@ -14,6 +14,11 @@
     "set": [],
     "main": [
       {
+        "name": "Pikachu Pho",
+        "price": 450,
+        "image": "products/main/pikachu pho.webp"
+      },
+      {
         "name": "Bolognese",
         "price": 473,
         "image": "products/main/bolognese.webp"

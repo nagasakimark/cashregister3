@@ -154,6 +154,16 @@
         "name": "Zenzai",
         "price": 243,
         "image": "products/dessert/zenzai.webp"
+      },
+      {
+        "name": "Afternoon Tea",
+        "price": 275,
+        "image": "products/dessert/afternoon tea.webp"
+      },
+      {
+        "name": "Scone",
+        "price": 215,
+        "image": "products/dessert/scone.webp"
       }
     ],
     "drink": [
